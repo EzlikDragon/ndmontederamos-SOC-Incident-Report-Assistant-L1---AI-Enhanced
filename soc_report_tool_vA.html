@@ -7,58 +7,86 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f8f9fa;
-            --text-color: #212529;
-            --card-bg: #ffffff;
-            --border-color: #dee2e6;
+            --bg-color: #0a0a0a;
+            --text-color: #00ff41;
+            --card-bg: #0a0a0a;
+            --border-color: #003b00;
+            --primary-color: #00ff41;
+            --secondary-color: #008f11;
+            --accent-color: #003b00;
         }
         .dark-mode {
-            --bg-color: #212529;
-            --text-color: #f8f9fa;
-            --card-bg: #343a40;
-            --border-color: #495057;
+            --bg-color: #000000;
+            --text-color: #00ff41;
+            --card-bg: #0a0a0a;
+            --border-color: #008f11;
         }
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: all 0.3s;
             padding: 20px;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Courier New', monospace;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 65, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 143, 17, 0.03) 0%, transparent 20%);
+            min-height: 100vh;
+            position: relative;
         }
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.1);
+            border-radius: 0;
+        }
+        .card-header {
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+            border-bottom: 1px solid var(--border-color);
+            font-weight: bold;
+            letter-spacing: 1px;
         }
         .form-control, .form-select {
-            background-color: var(--card-bg);
+            background-color: rgba(0, 0, 0, 0.5);
             color: var(--text-color);
-            border-color: var(--border-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            font-family: 'Courier New', monospace;
         }
         .form-control:focus, .form-select:focus {
-            background-color: var(--card-bg);
+            background-color: rgba(0, 0, 0, 0.7);
             color: var(--text-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
         }
         .btn-primary {
-            background-color: #0d6efd;
-            border-color: #0d6efd;
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #000;
+            font-weight: bold;
+            border-radius: 0;
+        }
+        .btn-primary:hover {
+            background-color: #00cc34;
+            border-color: #00cc34;
+            color: #000;
         }
         .btn-outline-secondary {
             color: var(--text-color);
             border-color: var(--border-color);
+            border-radius: 0;
         }
         .btn-outline-secondary:hover {
             background-color: var(--border-color);
             color: var(--text-color);
         }
         .log-entry, .action-entry {
-            background: rgba(13, 110, 253, 0.1);
-            border-left: 4px solid #0d6efd;
+            background: rgba(0, 255, 65, 0.05);
+            border-left: 4px solid var(--primary-color);
             padding: 10px;
             margin: 5px 0;
-            border-radius: 4px;
             position: relative;
+            border-radius: 0;
         }
         .delete-btn {
             position: absolute;
@@ -66,7 +94,7 @@
             right: 5px;
             background: transparent;
             border: none;
-            color: #dc3545;
+            color: #ff0033;
             cursor: pointer;
             font-size: 0.8em;
         }
@@ -83,35 +111,57 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #ccc;
+            background-color: #003b00;
             transition: .4s;
-            border-radius: 34px;
+            border-radius: 0;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: #00ff41;
+            transition: .4s;
+            border-radius: 0;
+        }
+        input:checked + .toggle-slider {
+            background-color: #008f11;
+        }
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
         }
         .ai-section {
-            background: rgba(25, 135, 84, 0.1);
-            border-left: 4px solid #198754;
+            background: rgba(0, 143, 17, 0.1);
+            border-left: 4px solid var(--secondary-color);
             padding: 15px;
             margin: 15px 0;
+            border-radius: 0;
         }
         .resolved-section {
-            background: rgba(255, 193, 7, 0.1);
-            border-left: 4px solid #ffc107;
+            background: rgba(0, 255, 65, 0.1);
+            border-left: 4px solid var(--primary-color);
             padding: 15px;
             margin: 15px 0;
+            border-radius: 0;
         }
         textarea {
             min-height: 100px;
             font-family: 'Courier New', monospace;
             font-size: 0.9em;
+            border-radius: 0;
         }
         .modal-content {
             background-color: var(--card-bg);
             color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0;
         }
         .data-point-form {
-            background: rgba(0,0,0,0.05);
+            background: rgba(0, 255, 65, 0.05);
             padding: 15px;
-            border-radius: 5px;
+            border-radius: 0;
             margin: 10px 0;
         }
         .api-key-input {
@@ -122,56 +172,66 @@
             width: 1rem;
             height: 1rem;
             margin-right: 0.5rem;
+            border-color: var(--primary-color);
+            border-right-color: transparent;
         }
         .status-badge {
             font-size: 0.75em;
             padding: 2px 6px;
-            border-radius: 3px;
+            border-radius: 0;
+            font-family: 'Courier New', monospace;
         }
         .status-connected {
-            background-color: #198754;
-            color: white;
+            background-color: var(--primary-color);
+            color: #000;
         }
         .status-disconnected {
-            background-color: #6c757d;
-            color: white;
+            background-color: #333;
+            color: var(--text-color);
         }
         .ai-assistant-btn {
-            background: linear-gradient(135deg, #198754 0%, #0d6efd 100%);
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
             border: none;
-            color: white;
-            font-weight: 600;
+            color: #000;
+            font-weight: bold;
             padding: 12px 24px;
             font-size: 1.1em;
+            border-radius: 0;
+            letter-spacing: 1px;
+        }
+        .ai-assistant-btn:hover {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
         }
         .missing-details-alert {
-            background: rgba(255, 193, 7, 0.2);
+            background: rgba(255, 193, 7, 0.1);
             border-left: 4px solid #ffc107;
             padding: 12px;
             margin: 10px 0;
-            border-radius: 4px;
+            border-radius: 0;
         }
         .mitre-badge {
-            background-color: #6f42c1;
-            color: white;
+            background-color: var(--secondary-color);
+            color: #000;
             padding: 2px 8px;
-            border-radius: 3px;
+            border-radius: 0;
             font-size: 0.8em;
-            font-weight: 500;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
         }
         .ioc-badge {
-            background-color: #dc3545;
-            color: white;
+            background-color: #ff0033;
+            color: #000;
             padding: 2px 8px;
-            border-radius: 3px;
+            border-radius: 0;
             font-size: 0.8em;
-            font-weight: 500;
+            font-weight: bold;
             margin-right: 5px;
             margin-bottom: 5px;
             display: inline-block;
+            font-family: 'Courier New', monospace;
         }
         .timeline-item {
-            border-left: 3px solid #0d6efd;
+            border-left: 3px solid var(--primary-color);
             padding-left: 15px;
             margin-bottom: 10px;
             position: relative;
@@ -183,23 +243,88 @@
             top: 0;
             width: 12px;
             height: 12px;
-            background: #0d6efd;
-            border-radius: 50%;
+            background: var(--primary-color);
+            border-radius: 0;
+        }
+        /* Matrix rain effect in background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.03;
+        }
+        /* Footer Styles */
+        footer {
+            margin-top: 40px;
+            padding: 20px 0;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: var(--text-color);
+            background: rgba(0, 0, 0, 0.7);
+        }
+        .footer-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .footer-separator {
+            color: var(--primary-color);
+        }
+        .footer-text {
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .glitch {
+            animation: glitch 2s infinite;
+        }
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 0 #ff0033, -2px 0 0 #00ff41; }
+            5% { text-shadow: 2px 0 0 #ff0033, -2px 0 0 #00ff41; }
+            6% { text-shadow: -1px 0 0 #ff0033, 1px 0 0 #00ff41; }
+            7% { text-shadow: 0 0 0 #ff0033, 0 0 0 #00ff41; }
+            8% { text-shadow: -1px 0 0 #ff0033, 1px 0 0 #00ff41; }
+            9% { text-shadow: 0 0 0 #ff0033, 0 0 0 #00ff41; }
+            10% { text-shadow: 2px 0 0 #ff0033, -2px 0 0 #00ff41; }
+            100% { text-shadow: 2px 0 0 #ff0033, -2px 0 0 #00ff41; }
+        }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
         }
     </style>
 </head>
 <body>
+    <!-- Matrix Background Effect -->
+    <div class="matrix-bg" id="matrixBg"></div>
+    
     <div class="container-fluid">
         <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3">🤖 SOC Incident Report Assistant (L1) - AI Enhanced</h1>
+            <h1 class="h3 glitch">🤖 SOC INCIDENT REPORT ASSISTANT (L1) - AI ENHANCED</h1>
             <div class="d-flex align-items-center gap-3">
-                <span>Dark Mode</span>
+                <span>MATRIX MODE</span>
                 <label class="toggle-switch">
-                    <input type="checkbox" id="darkModeToggle">
+                    <input type="checkbox" id="darkModeToggle" checked>
                     <span class="toggle-slider"></span>
                 </label>
-                <button class="btn btn-sm btn-outline-danger" onclick="clearAllData()">Clear Form</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="clearAllData()">CLEAR FORM</button>
             </div>
         </div>
 
@@ -208,173 +333,173 @@
             <div class="col-md-8">
                 <!-- Basic Info Card -->
                 <div class="card">
-                    <div class="card-header bg-primary text-white">
+                    <div class="card-header">
                         <h5 class="mb-0">INCIDENT REPORT FORM</h5>
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-4">
-                                <label class="form-label">Analyst Name</label>
-                                <input type="text" class="form-control" id="analystName" value="Nicole Dominique Montederamos (L1 Analyst)">
+                                <label class="form-label">ANALYST NAME</label>
+                                <input type="text" class="form-control" id="analystName" value="NICOLE DOMINIQUE MONTEDERAMOS (L1 ANALYST)">
                             </div>
                             
                             <div class="col-md-4">
-                                <label class="form-label">Endpoint (Detection Source)</label>
+                                <label class="form-label">ENDPOINT (DETECTION SOURCE)</label>
                                 <select class="form-select" id="endpoint">
-                                    <option value="">-- Select Endpoint --</option>
-                                    <optgroup label="Network Security">
-                                        <option>Firewall (Perimeter)</option>
-                                        <option>NGFW (Next-Generation Firewall)</option>
-                                        <option>WAF (Web Application Firewall)</option>
+                                    <option value="">-- SELECT ENDPOINT --</option>
+                                    <optgroup label="NETWORK SECURITY">
+                                        <option>FIREWALL (PERIMETER)</option>
+                                        <option>NGFW (NEXT-GENERATION FIREWALL)</option>
+                                        <option>WAF (WEB APPLICATION FIREWALL)</option>
                                         <option>IPS/IDS</option>
-                                        <option>VPN Gateway</option>
-                                        <option>Proxy Server</option>
-                                        <option>Email Gateway / SEG</option>
-                                        <option>DNS Filter</option>
+                                        <option>VPN GATEWAY</option>
+                                        <option>PROXY SERVER</option>
+                                        <option>EMAIL GATEWAY / SEG</option>
+                                        <option>DNS FILTER</option>
                                     </optgroup>
-                                    <optgroup label="Host & Endpoint">
-                                        <option>EDR (Endpoint Detection and Response)</option>
-                                        <option>AV (Antivirus)</option>
+                                    <optgroup label="HOST & ENDPOINT">
+                                        <option>EDR (ENDPOINT DETECTION AND RESPONSE)</option>
+                                        <option>AV (ANTIVIRUS)</option>
                                         <option>HIDS</option>
-                                        <option>Windows Event Logs</option>
-                                        <option>Linux Syslog / Auditd</option>
-                                        <option>macOS Unified Logs</option>
+                                        <option>WINDOWS EVENT LOGS</option>
+                                        <option>LINUX SYSLOG / AUDITD</option>
+                                        <option>MACOS UNIFIED LOGS</option>
                                     </optgroup>
-                                    <optgroup label="Cloud & Identity">
-                                        <option>Cloud SIEM (e.g., Sentinel)</option>
-                                        <option>CSPM (Cloud Security Posture Management)</option>
-                                        <option>CASB (Cloud Access Security Broker)</option>
-                                        <option>IAM Audit Logs</option>
-                                        <option>SSO Logs (Okta, Azure AD)</option>
+                                    <optgroup label="CLOUD & IDENTITY">
+                                        <option>CLOUD SIEM (E.G., SENTINEL)</option>
+                                        <option>CSPM (CLOUD SECURITY POSTURE MANAGEMENT)</option>
+                                        <option>CASB (CLOUD ACCESS SECURITY BROKER)</option>
+                                        <option>IAM AUDIT LOGS</option>
+                                        <option>SSO LOGS (OKTA, AZURE AD)</option>
                                     </optgroup>
-                                    <optgroup label="Application & Specialized">
-                                        <option>SaaS Audit Logs (M365, Google)</option>
-                                        <option>DLP (Data Loss Prevention)</option>
-                                        <option>SIEM Correlation Alert</option>
-                                        <option>Manual Report / User Notification</option>
+                                    <optgroup label="APPLICATION & SPECIALIZED">
+                                        <option>SAAS AUDIT LOGS (M365, GOOGLE)</option>
+                                        <option>DLP (DATA LOSS PREVENTION)</option>
+                                        <option>SIEM CORRELATION ALERT</option>
+                                        <option>MANUAL REPORT / USER NOTIFICATION</option>
                                     </optgroup>
                                 </select>
                             </div>
                             
                             <div class="col-md-4">
-                                <label class="form-label">Case ID (Paste from SIEM)</label>
-                                <input type="text" class="form-control" id="caseId" placeholder="e.g., ALERT-2025-1223-8817">
+                                <label class="form-label">CASE ID (PASTE FROM SIEM)</label>
+                                <input type="text" class="form-control" id="caseId" placeholder="E.G., ALERT-2025-1223-8817">
                             </div>
                             
                             <div class="col-md-3">
-                                <label class="form-label">Status</label>
+                                <label class="form-label">STATUS</label>
                                 <select class="form-select" id="status" onchange="toggleFormSections()">
-                                    <option>Under Investigation</option>
-                                    <option>Resolved</option>
+                                    <option>UNDER INVESTIGATION</option>
+                                    <option>RESOLVED</option>
                                 </select>
                             </div>
                             
                             <div class="col-md-3">
-                                <label class="form-label">Priority</label>
+                                <label class="form-label">PRIORITY</label>
                                 <select class="form-select" id="priority">
-                                    <option>Informational</option>
-                                    <option>Low</option>
-                                    <option selected>Medium</option>
-                                    <option>High</option>
-                                    <option>Critical</option>
+                                    <option>INFORMATIONAL</option>
+                                    <option>LOW</option>
+                                    <option selected>MEDIUM</option>
+                                    <option>HIGH</option>
+                                    <option>CRITICAL</option>
                                 </select>
                             </div>
                             
                             <div class="col-md-6">
-                                <label class="form-label">Classification</label>
+                                <label class="form-label">CLASSIFICATION</label>
                                 <select class="form-select" id="classification" onchange="updateClassificationReason()">
-                                    <option value="">-- Select Classification --</option>
-                                    <optgroup label="Initial Access (TA0001)">
-                                        <option>Phishing (Spearphishing Link/Attachment)</option>
-                                        <option>Malicious Email (No interaction confirmed)</option>
-                                        <option>Exploit Public-Facing Application</option>
-                                        <option>External Remote Services (RDP/VPN brute force)</option>
-                                        <option>Valid Accounts (Credential-Based Attack)</option>
-                                        <option>Drive-by Compromise</option>
-                                        <option>Supply Chain Compromise</option>
+                                    <option value="">-- SELECT CLASSIFICATION --</option>
+                                    <optgroup label="INITIAL ACCESS (TA0001)">
+                                        <option>PHISHING (SPEARPHISHING LINK/ATTACHMENT)</option>
+                                        <option>MALICIOUS EMAIL (NO INTERACTION CONFIRMED)</option>
+                                        <option>EXPLOIT PUBLIC-FACING APPLICATION</option>
+                                        <option>EXTERNAL REMOTE SERVICES (RDP/VPN BRUTE FORCE)</option>
+                                        <option>VALID ACCOUNTS (CREDENTIAL-BASED ATTACK)</option>
+                                        <option>DRIVE-BY COMPROMISE</option>
+                                        <option>SUPPLY CHAIN COMPROMISE</option>
                                     </optgroup>
-                                    <optgroup label="Execution (TA0002)">
-                                        <option>Malware Execution</option>
-                                        <option>Command and Scripting Interpreter</option>
-                                        <option>User Execution (double-clicked file)</option>
-                                        <option>Exploitation for Client Execution</option>
-                                        <option>Scheduled Task/Job</option>
+                                    <optgroup label="EXECUTION (TA0002)">
+                                        <option>MALWARE EXECUTION</option>
+                                        <option>COMMAND AND SCRIPTING INTERPRETER</option>
+                                        <option>USER EXECUTION (DOUBLE-CLICKED FILE)</option>
+                                        <option>EXPLOITATION FOR CLIENT EXECUTION</option>
+                                        <option>SCHEDULED TASK/JOB</option>
                                     </optgroup>
-                                    <optgroup label="Persistence (TA0003)">
-                                        <option>Account Manipulation</option>
-                                        <option>Boot or Logon Autostart Execution</option>
-                                        <option>Scheduled Task/Job</option>
-                                        <option>Valid Accounts</option>
+                                    <optgroup label="PERSISTENCE (TA0003)">
+                                        <option>ACCOUNT MANIPULATION</option>
+                                        <option>BOOT OR LOGON AUTOSTART EXECUTION</option>
+                                        <option>SCHEDULED TASK/JOB</option>
+                                        <option>VALID ACCOUNTS</option>
                                     </optgroup>
-                                    <optgroup label="Privilege Escalation (TA0004)">
-                                        <option>Exploitation for Privilege Escalation</option>
-                                        <option>Process Injection</option>
-                                        <option>Access Token Manipulation</option>
+                                    <optgroup label="PRIVILEGE ESCALATION (TA0004)">
+                                        <option>EXPLOITATION FOR PRIVILEGE ESCALATION</option>
+                                        <option>PROCESS INJECTION</option>
+                                        <option>ACCESS TOKEN MANIPULATION</option>
                                     </optgroup>
-                                    <optgroup label="Defense Evasion (TA0005)">
-                                        <option>Obfuscated Files or Information</option>
-                                        <option>Impair Defenses (AV/EDR tampering)</option>
-                                        <option>Signed Binary Proxy Execution</option>
-                                        <option>Indicator Removal</option>
+                                    <optgroup label="DEFENSE EVASION (TA0005)">
+                                        <option>OBFUSCATED FILES OR INFORMATION</option>
+                                        <option>IMPAIR DEFENSES (AV/EDR TAMPERING)</option>
+                                        <option>SIGNED BINARY PROXY EXECUTION</option>
+                                        <option>INDICATOR REMOVAL</option>
                                     </optgroup>
-                                    <optgroup label="Credential Access (TA0006)">
-                                        <option>Credential Dumping</option>
-                                        <option>Brute Force</option>
-                                        <option>OS Credential Dumping</option>
-                                        <option>Steal or Forge Kerberos Tickets</option>
+                                    <optgroup label="CREDENTIAL ACCESS (TA0006)">
+                                        <option>CREDENTIAL DUMPING</option>
+                                        <option>BRUTE FORCE</option>
+                                        <option>OS CREDENTIAL DUMPING</option>
+                                        <option>STEAL OR FORGE KERBEROS TICKETS</option>
                                     </optgroup>
-                                    <optgroup label="Discovery (TA0007)">
-                                        <option>Network Service Discovery</option>
-                                        <option>System Information Discovery</option>
-                                        <option>Account Discovery</option>
-                                        <option>File and Directory Discovery</option>
+                                    <optgroup label="DISCOVERY (TA0007)">
+                                        <option>NETWORK SERVICE DISCOVERY</option>
+                                        <option>SYSTEM INFORMATION DISCOVERY</option>
+                                        <option>ACCOUNT DISCOVERY</option>
+                                        <option>FILE AND DIRECTORY DISCOVERY</option>
                                     </optgroup>
-                                    <optgroup label="Lateral Movement (TA0008)">
-                                        <option>Remote Services (SMB, RPC, RDP)</option>
-                                        <option>Internal Spearphishing</option>
-                                        <option>Replication Through Removable Media</option>
+                                    <optgroup label="LATERAL MOVEMENT (TA0008)">
+                                        <option>REMOTE SERVICES (SMB, RPC, RDP)</option>
+                                        <option>INTERNAL SPEARPHISHING</option>
+                                        <option>REPLICATION THROUGH REMOVABLE MEDIA</option>
                                     </optgroup>
-                                    <optgroup label="Collection (TA0009)">
-                                        <option>Data from Local System</option>
-                                        <option>Email Collection</option>
-                                        <option>Screen Capture</option>
-                                        <option>Audio Capture</option>
+                                    <optgroup label="COLLECTION (TA0009)">
+                                        <option>DATA FROM LOCAL SYSTEM</option>
+                                        <option>EMAIL COLLECTION</option>
+                                        <option>SCREEN CAPTURE</option>
+                                        <option>AUDIO CAPTURE</option>
                                     </optgroup>
-                                    <optgroup label="Exfiltration (TA0010)">
-                                        <option>Exfiltration Over C2 Channel</option>
-                                        <option>Automated Exfiltration</option>
-                                        <option>Exfiltration Over Web Service</option>
+                                    <optgroup label="EXFILTRATION (TA0010)">
+                                        <option>EXFILTRATION OVER C2 CHANNEL</option>
+                                        <option>AUTOMATED EXFILTRATION</option>
+                                        <option>EXFILTRATION OVER WEB SERVICE</option>
                                     </optgroup>
-                                    <optgroup label="Impact (TA0040)">
-                                        <option>Data Encrypted for Impact (Ransomware)</option>
-                                        <option>Service Stop (DoS)</option>
-                                        <option>Defacement</option>
-                                        <option>Data Destruction</option>
+                                    <optgroup label="IMPACT (TA0040)">
+                                        <option>DATA ENCRYPTED FOR IMPACT (RANSOMWARE)</option>
+                                        <option>SERVICE STOP (DOS)</option>
+                                        <option>DEFACEMENT</option>
+                                        <option>DATA DESTRUCTION</option>
                                     </optgroup>
-                                    <optgroup label="Other Categories">
-                                        <option>Policy Violation</option>
-                                        <option>Reconnaissance / Scanning</option>
-                                        <option>Suspicious Network Activity</option>
-                                        <option>False Positive</option>
-                                        <option>Test / Drill</option>
-                                        <option>Data Spillage</option>
-                                        <option>Insider Threat Indicator</option>
+                                    <optgroup label="OTHER CATEGORIES">
+                                        <option>POLICY VIOLATION</option>
+                                        <option>RECONNAISSANCE / SCANNING</option>
+                                        <option>SUSPICIOUS NETWORK ACTIVITY</option>
+                                        <option>FALSE POSITIVE</option>
+                                        <option>TEST / DRILL</option>
+                                        <option>DATA SPILLAGE</option>
+                                        <option>INSIDER THREAT INDICATOR</option>
                                     </optgroup>
                                 </select>
                             </div>
                             
                             <div class="col-12">
-                                <label class="form-label">Reason for Classification</label>
-                                <textarea class="form-control" id="classificationReason" rows="2" placeholder="Brief explanation for the chosen classification..."></textarea>
+                                <label class="form-label">REASON FOR CLASSIFICATION</label>
+                                <textarea class="form-control" id="classificationReason" rows="2" placeholder="BRIEF EXPLANATION FOR THE CHOSEN CLASSIFICATION..."></textarea>
                             </div>
                             
                             <div class="col-md-6">
-                                <label class="form-label">Date Created</label>
+                                <label class="form-label">DATE CREATED</label>
                                 <input type="datetime-local" class="form-control" id="dateCreated" value="">
                             </div>
                             
                             <div class="col-md-6" id="dateResolvedSection" style="display: none;">
-                                <label class="form-label">Date Resolved</label>
+                                <label class="form-label">DATE RESOLVED</label>
                                 <input type="datetime-local" class="form-control" id="dateResolved">
                             </div>
                         </div>
@@ -384,83 +509,83 @@
                 <!-- UNDER INVESTIGATION SECTION (Dynamic) -->
                 <div id="investigationSection">
                     <div class="card">
-                        <div class="card-header bg-warning text-dark">
+                        <div class="card-header">
                             <h5 class="mb-0">ANALYSIS & CURRENT EVIDENCE</h5>
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label">Confirmed Evidence</label>
+                                <label class="form-label">CONFIRMED EVIDENCE</label>
                                 <div id="confirmedEvidence">
                                     <!-- Dynamic content will appear here -->
                                 </div>
                                 <button class="btn btn-sm btn-outline-primary mt-2" onclick="showDataPointModal('confirmed')">
-                                    + ADD Confirmed Data Point
+                                    + ADD CONFIRMED DATA POINT
                                 </button>
                             </div>
                             
                             <div class="mb-3">
-                                <label class="form-label">Not Confirmed (Gaps)</label>
+                                <label class="form-label">NOT CONFIRMED (GAPS)</label>
                                 <div id="notConfirmedEvidence">
                                     <!-- Dynamic content will appear here -->
                                 </div>
                                 <button class="btn btn-sm btn-outline-primary mt-2" onclick="showDataPointModal('notConfirmed')">
-                                    + ADD Investigation Gap
+                                    + ADD INVESTIGATION GAP
                                 </button>
                             </div>
                             
                             <div class="ai-section">
                                 <h6>ANALYSIS NOTES & DETERMINE OUTCOME</h6>
-                                <textarea class="form-control" id="determineOutcome" rows="3" placeholder="Analysis notes and decision logic..."></textarea>
+                                <textarea class="form-control" id="determineOutcome" rows="3" placeholder="ANALYSIS NOTES AND DECISION LOGIC..."></textarea>
                             </div>
                         </div>
                     </div>
                     
                     <div class="card">
-                        <div class="card-header bg-secondary text-white">
+                        <div class="card-header">
                             <h5 class="mb-0">INVESTIGATION RESPONSE</h5>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-12">
-                                    <label class="form-label">Timeline & Actions</label>
-                                    <textarea class="form-control" id="timelineActions" rows="3" placeholder="Chronological timeline of investigation actions..."></textarea>
+                                    <label class="form-label">TIMELINE & ACTIONS</label>
+                                    <textarea class="form-control" id="timelineActions" rows="3" placeholder="CHRONOLOGICAL TIMELINE OF INVESTIGATION ACTIONS..."></textarea>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Containment Action</label>
-                                    <textarea class="form-control" id="containmentAction" rows="3" placeholder="Immediate containment steps taken..."></textarea>
+                                    <label class="form-label">CONTAINMENT ACTION</label>
+                                    <textarea class="form-control" id="containmentAction" rows="3" placeholder="IMMEDIATE CONTAINMENT STEPS TAKEN..."></textarea>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Eradication & Remediation</label>
-                                    <textarea class="form-control" id="eradicationRemediation" rows="3" placeholder="Root cause removal and remediation..."></textarea>
+                                    <label class="form-label">ERADICATION & REMEDIATION</label>
+                                    <textarea class="form-control" id="eradicationRemediation" rows="3" placeholder="ROOT CAUSE REMOVAL AND REMEDIATION..."></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="card">
-                        <div class="card-header bg-dark text-white">
+                        <div class="card-header">
                             <h5 class="mb-0">ESCALATION DECISION</h5>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">Does this need L2/L3?</label>
+                                    <label class="form-label">DOES THIS NEED L2/L3?</label>
                                     <select class="form-select" id="needsEscalation" onchange="toggleEscalationReason()">
                                         <option>NO</option>
                                         <option>YES</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Report Prepared By</label>
-                                    <input type="text" class="form-control" id="preparedBy" value="Nicole Dominique Montederamos (L1 Analyst)" readonly>
+                                    <label class="form-label">REPORT PREPARED BY</label>
+                                    <input type="text" class="form-control" id="preparedBy" value="NICOLE DOMINIQUE MONTEDERAMOS (L1 ANALYST)" readonly>
                                 </div>
                                 <div class="col-12" id="escalationReasonSection" style="display: none;">
-                                    <label class="form-label">Why? (Escalation Justification)</label>
-                                    <textarea class="form-control" id="escalationReason" rows="2" placeholder="Reason for escalating to L2/L3..."></textarea>
+                                    <label class="form-label">WHY? (ESCALATION JUSTIFICATION)</label>
+                                    <textarea class="form-control" id="escalationReason" rows="2" placeholder="REASON FOR ESCALATING TO L2/L3..."></textarea>
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label">Recommendation</label>
-                                    <textarea class="form-control" id="recommendation" rows="2" placeholder="Recommended next steps..."></textarea>
+                                    <label class="form-label">RECOMMENDATION</label>
+                                    <textarea class="form-control" id="recommendation" rows="2" placeholder="RECOMMENDED NEXT STEPS..."></textarea>
                                 </div>
                             </div>
                         </div>
@@ -473,69 +598,69 @@
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="mb-0">RESOLUTION DETAILS</h5>
                             <div class="col-md-4">
-                                <label class="form-label">Total Time to Resolve</label>
-                                <input type="text" class="form-control" id="timeToResolve" placeholder="e.g., 1 hour 30 minutes">
+                                <label class="form-label">TOTAL TIME TO RESOLVE</label>
+                                <input type="text" class="form-control" id="timeToResolve" placeholder="E.G., 1 HOUR 30 MINUTES">
                             </div>
                         </div>
                         
                         <div class="card mb-3">
-                            <div class="card-header bg-success text-white">
-                                <h6 class="mb-0">WHAT I DID (L1 Actions)</h6>
+                            <div class="card-header">
+                                <h6 class="mb-0">WHAT I DID (L1 ACTIONS)</h6>
                             </div>
                             <div class="card-body">
                                 <div id="actionsList">
                                     <!-- Dynamic actions will appear here -->
                                 </div>
                                 <button class="btn btn-sm btn-outline-success mt-2" onclick="showActionModal()">
-                                    + ADD Action
+                                    + ADD ACTION
                                 </button>
                             </div>
                         </div>
                         
                         <div class="card mb-3">
-                            <div class="card-header bg-info text-white">
+                            <div class="card-header">
                                 <h6 class="mb-0">RESPONSE & REMEDIATION ACTIONS</h6>
                             </div>
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-4">
-                                        <label class="form-label">Containment</label>
-                                        <textarea class="form-control" id="containment" rows="3" placeholder="e.g., Blocked malicious domain at firewall..."></textarea>
+                                        <label class="form-label">CONTAINMENT</label>
+                                        <textarea class="form-control" id="containment" rows="3" placeholder="E.G., BLOCKED MALICIOUS DOMAIN AT FIREWALL..."></textarea>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label">Eradication</label>
-                                        <textarea class="form-control" id="eradication" rows="3" placeholder="e.g., Performed full antivirus scan..."></textarea>
+                                        <label class="form-label">ERADICATION</label>
+                                        <textarea class="form-control" id="eradication" rows="3" placeholder="E.G., PERFORMED FULL ANTIVIRUS SCAN..."></textarea>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label">Recovery</label>
-                                        <textarea class="form-control" id="recovery" rows="3" placeholder="e.g., Restored normal network access..."></textarea>
+                                        <label class="form-label">RECOVERY</label>
+                                        <textarea class="form-control" id="recovery" rows="3" placeholder="E.G., RESTORED NORMAL NETWORK ACCESS..."></textarea>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="card mb-3">
-                            <div class="card-header bg-primary text-white">
-                                <h6 class="mb-0">WHAT I FOUND (Evidence)</h6>
+                            <div class="card-header">
+                                <h6 class="mb-0">WHAT I FOUND (EVIDENCE)</h6>
                             </div>
                             <div class="card-body">
                                 <div id="resolvedEvidence">
                                     <!-- Dynamic evidence will appear here -->
                                 </div>
                                 <button class="btn btn-sm btn-outline-primary mt-2" onclick="showDataPointModal('resolved')">
-                                    + ADD Evidence Data Point
+                                    + ADD EVIDENCE DATA POINT
                                 </button>
                             </div>
                         </div>
                         
                         <div class="card">
-                            <div class="card-header bg-warning text-dark">
+                            <div class="card-header">
                                 <h6 class="mb-0">FINAL RESULT & CLOSURE</h6>
                             </div>
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label class="form-label">Impact</label>
+                                        <label class="form-label">IMPACT</label>
                                         <select class="form-select" id="impact">
                                             <option>NONE</option>
                                             <option>MINIMAL</option>
@@ -544,45 +669,45 @@
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Does this need L2/L3?</label>
+                                        <label class="form-label">DOES THIS NEED L2/L3?</label>
                                         <select class="form-select" id="resolvedEscalation">
                                             <option>NO</option>
                                             <option>YES</option>
                                         </select>
                                     </div>
                                     <div class="col-12">
-                                        <label class="form-label">Reason</label>
-                                        <textarea class="form-control" id="finalReason" rows="2" placeholder="Explanation of impact assessment..."></textarea>
+                                        <label class="form-label">REASON</label>
+                                        <textarea class="form-control" id="finalReason" rows="2" placeholder="EXPLANATION OF IMPACT ASSESSMENT..."></textarea>
                                     </div>
                                     <div class="col-12">
-                                        <label class="form-label">Closure Checklist</label>
+                                        <label class="form-label">CLOSURE CHECKLIST</label>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="check1">
-                                            <label class="form-check-label">All evidence collected and saved</label>
+                                            <label class="form-check-label">ALL EVIDENCE COLLECTED AND SAVED</label>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="check2">
-                                            <label class="form-check-label">Malicious indicators (URL/sender) blocked</label>
+                                            <label class="form-check-label">MALICIOUS INDICATORS (URL/SENDER) BLOCKED</label>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="check3">
-                                            <label class="form-check-label">User notified (if policy requires)</label>
+                                            <label class="form-check-label">USER NOTIFIED (IF POLICY REQUIRES)</label>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="check4" checked>
-                                            <label class="form-check-label">No further action needed</label>
+                                            <label class="form-check-label">NO FURTHER ACTION NEEDED</label>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="check5">
-                                            <label class="form-check-label">Ticket ready to close</label>
+                                            <label class="form-check-label">TICKET READY TO CLOSE</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Report Closed By</label>
-                                        <input type="text" class="form-control" id="closedBy" value="Nicole Dominique Montederamos (L1 Analyst)" readonly>
+                                        <label class="form-label">REPORT CLOSED BY</label>
+                                        <input type="text" class="form-control" id="closedBy" value="NICOLE DOMINIQUE MONTEDERAMOS (L1 ANALYST)" readonly>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Closed On</label>
+                                        <label class="form-label">CLOSED ON</label>
                                         <input type="date" class="form-control" id="closedOn">
                                     </div>
                                 </div>
@@ -596,46 +721,46 @@
             <div class="col-md-4">
                 <!-- API Configuration Card -->
                 <div class="card sticky-top" style="top: 20px;">
-                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">🔧 OpenRouter API</h5>
-                        <span id="apiStatusBadge" class="status-badge status-disconnected">Disconnected</span>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">🔧 OPENROUTER API</h5>
+                        <span id="apiStatusBadge" class="status-badge status-disconnected">DISCONNECTED</span>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label">API Key Source</label>
+                            <label class="form-label">API KEY SOURCE</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="apiKeySource" id="autoApiKey" value="auto" checked onchange="toggleApiKeySource()">
                                 <label class="form-check-label" for="autoApiKey">
-                                    Auto-load from APIkey.txt
+                                    AUTO-LOAD FROM APIKEY.TXT
                                 </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="apiKeySource" id="manualApiKey" value="manual" onchange="toggleApiKeySource()">
                                 <label class="form-check-label" for="manualApiKey">
-                                    Enter manually
+                                    ENTER MANUALLY
                                 </label>
                             </div>
                         </div>
                         
                         <div id="manualApiKeySection" style="display: none;">
                             <div class="mb-3">
-                                <label class="form-label">API Key (Manual)</label>
-                                <input type="password" class="form-control api-key-input" id="apiKeyManual" placeholder="sk-or-xxxxxxxxxxxxxxxxxxxxxxxx">
+                                <label class="form-label">API KEY (MANUAL)</label>
+                                <input type="password" class="form-control api-key-input" id="apiKeyManual" placeholder="SK-OR-XXXXXXXXXXXXXXXX">
                             </div>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">AI Model</label>
+                            <label class="form-label">AI MODEL</label>
                             <select class="form-select" id="aiModel">
-                                <option value="openai/gpt-3.5-turbo">GPT-3.5 Turbo (Fast & Cheap)</option>
-                                <option value="openai/gpt-4">GPT-4 (Best Quality)</option>
-                                <option value="meta-llama/llama-3.1-8b-instruct">Llama 3.1 8B (Open Source)</option>
-                                <option value="google/gemini-pro">Gemini Pro (Google)</option>
-                                <option value="anthropic/claude-3-haiku">Claude 3 Haiku (Fast)</option>
+                                <option value="openai/gpt-3.5-turbo">GPT-3.5 TURBO (FAST & CHEAP)</option>
+                                <option value="openai/gpt-4">GPT-4 (BEST QUALITY)</option>
+                                <option value="meta-llama/llama-3.1-8b-instruct">LLAMA 3.1 8B (OPEN SOURCE)</option>
+                                <option value="google/gemini-pro">GEMINI PRO (GOOGLE)</option>
+                                <option value="anthropic/claude-3-haiku">CLAUDE 3 HAIKU (FAST)</option>
                             </select>
                         </div>
                         <button class="btn btn-outline-success w-100 mb-3" onclick="testAPI()" id="testApiBtn">
-                            🧪 Test API Connection
+                            🧪 TEST API CONNECTION
                         </button>
                         <div id="apiStatus" class="small"></div>
                     </div>
@@ -643,25 +768,25 @@
 
                 <!-- AI Assistant Card -->
                 <div class="card mt-3">
-                    <div class="card-header bg-success text-white">
+                    <div class="card-header">
                         <h5 class="mb-0">🤖 AI ASSISTANT</h5>
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2 mb-4">
                             <button class="btn ai-assistant-btn" onclick="generateCompleteIncidentReport()" id="aiReportBtn">
                                 <span class="spinner-border spinner-border-sm d-none" id="aiReportSpinner"></span>
-                                🤖 Generate Complete Incident Report
+                                🤖 GENERATE COMPLETE INCIDENT REPORT
                             </button>
-                            <small class="text-muted text-center">AI will analyze form data, extract IOCs, map MITRE ATT&CK, and generate professional SOC report</small>
+                            <small class="text-muted text-center">AI WILL ANALYZE FORM DATA, EXTRACT IOCS, MAP MITRE ATT&CK, AND GENERATE PROFESSIONAL SOC REPORT</small>
                         </div>
                         
                         <div id="missingDetailsAlert" class="missing-details-alert" style="display: none;">
-                            <strong>⚠️ Missing Critical Details:</strong>
+                            <strong>⚠️ MISSING CRITICAL DETAILS:</strong>
                             <div id="missingDetailsList"></div>
                         </div>
                         
                         <div id="iocExtraction" style="display: none; margin-top: 10px;">
-                            <strong>🕵️ Extracted IOCs:</strong>
+                            <strong>🕵️ EXTRACTED IOCS:</strong>
                             <div id="iocList" class="mt-2"></div>
                         </div>
                         
@@ -671,62 +796,75 @@
 
                 <!-- Report Output Card -->
                 <div class="card mt-3">
-                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">📄 FINAL REPORT OUTPUT</h5>
                         <div>
-                            <button class="btn btn-sm btn-light me-2" onclick="generateBasicReport()">Generate Basic</button>
-                            <button class="btn btn-sm btn-secondary" onclick="copyToClipboard()">📋 Copy</button>
+                            <button class="btn btn-sm btn-light me-2" onclick="generateBasicReport()">GENERATE BASIC</button>
+                            <button class="btn btn-sm btn-secondary" onclick="copyToClipboard()">📋 COPY</button>
                         </div>
                     </div>
                     <div class="card-body">
-                        <textarea class="form-control" id="reportOutput" rows="20" readonly placeholder="Complete AI-generated report will appear here..."></textarea>
+                        <textarea class="form-control" id="reportOutput" rows="20" readonly placeholder="COMPLETE AI-GENERATED REPORT WILL APPEAR HERE..."></textarea>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text glitch">NICOLE DOMINIQUE MONTEDERAMOS</div>
+                <div class="footer-separator">|</div>
+                <div class="footer-text">SOC INCIDENT REPORT ASSISTANT</div>
+                <div class="footer-separator">|</div>
+                <div class="footer-text">HOMELAB</div>
+            </div>
+        </div>
+    </footer>
+
     <!-- Data Point Modal -->
     <div class="modal fade" id="dataPointModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Data Point</h5>
+                    <h5 class="modal-title">ADD DATA POINT</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="dataPointType">
                     <div class="mb-3">
-                        <label class="form-label">Data Point Type</label>
+                        <label class="form-label">DATA POINT TYPE</label>
                         <select class="form-select" id="dpType">
-                            <option value="">-- Select Type --</option>
-                            <option>Network Log</option>
-                            <option>Firewall Log</option>
-                            <option>Proxy Log</option>
-                            <option>Email Header</option>
-                            <option>EDR Alert</option>
-                            <option>Authentication Log</option>
-                            <option>Endpoint Log</option>
-                            <option>Threat Intel</option>
-                            <option>Other</option>
+                            <option value="">-- SELECT TYPE --</option>
+                            <option>NETWORK LOG</option>
+                            <option>FIREWALL LOG</option>
+                            <option>PROXY LOG</option>
+                            <option>EMAIL HEADER</option>
+                            <option>EDR ALERT</option>
+                            <option>AUTHENTICATION LOG</option>
+                            <option>ENDPOINT LOG</option>
+                            <option>THREAT INTEL</option>
+                            <option>OTHER</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Log Query / Search</label>
-                        <input type="text" class="form-control" id="dpQuery" placeholder="e.g., index=firewall dest_ip=...">
+                        <label class="form-label">LOG QUERY / SEARCH</label>
+                        <input type="text" class="form-control" id="dpQuery" placeholder="E.G., INDEX=FIREWALL DEST_IP=...">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Detail / Result</label>
-                        <input type="text" class="form-control" id="dpDetail" placeholder="e.g., Connection BLOCKED, malware hash: ...">
+                        <label class="form-label">DETAIL / RESULT</label>
+                        <input type="text" class="form-control" id="dpDetail" placeholder="E.G., CONNECTION BLOCKED, MALWARE HASH: ...">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Source System</label>
-                        <input type="text" class="form-control" id="dpSource" placeholder="e.g., Splunk, CrowdStrike, Firewall-01">
+                        <label class="form-label">SOURCE SYSTEM</label>
+                        <input type="text" class="form-control" id="dpSource" placeholder="E.G., SPLUNK, CROWDSTRIKE, FIREWALL-01">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="addDataPoint()">Add Data Point</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="button" class="btn btn-primary" onclick="addDataPoint()">ADD DATA POINT</button>
                 </div>
             </div>
         </div>
@@ -737,37 +875,37 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Action</h5>
+                    <h5 class="modal-title">ADD ACTION</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Action Type</label>
+                        <label class="form-label">ACTION TYPE</label>
                         <select class="form-select" id="actionType">
-                            <option value="">-- Select Action --</option>
-                            <option>Investigation & Analysis</option>
-                            <option>Containment & Blocking</option>
-                            <option>Eradication & Remediation</option>
-                            <option>Recovery & Closure</option>
-                            <option>Communication</option>
+                            <option value="">-- SELECT ACTION --</option>
+                            <option>INVESTIGATION & ANALYSIS</option>
+                            <option>CONTAINMENT & BLOCKING</option>
+                            <option>ERADICATION & REMEDIATION</option>
+                            <option>RECOVERY & CLOSURE</option>
+                            <option>COMMUNICATION</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Verb + Action</label>
-                        <input type="text" class="form-control" id="actionVerb" placeholder="e.g., Reviewed firewall logs, Blocked malicious domain...">
+                        <label class="form-label">VERB + ACTION</label>
+                        <input type="text" class="form-control" id="actionVerb" placeholder="E.G., REVIEWED FIREWALL LOGS, BLOCKED MALICIOUS DOMAIN...">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Tool Used</label>
-                        <input type="text" class="form-control" id="actionTool" placeholder="e.g., Splunk, CrowdStrike Console, Firewall CLI">
+                        <label class="form-label">TOOL USED</label>
+                        <input type="text" class="form-control" id="actionTool" placeholder="E.G., SPLUNK, CROWDSTRIKE CONSOLE, FIREWALL CLI">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Result</label>
-                        <input type="text" class="form-control" id="actionResult" placeholder="e.g., Confirmed block, Found malicious file...">
+                        <label class="form-label">RESULT</label>
+                        <input type="text" class="form-control" id="actionResult" placeholder="E.G., CONFIRMED BLOCK, FOUND MALICIOUS FILE...">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="addAction()">Add Action</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="button" class="btn btn-primary" onclick="addAction()">ADD ACTION</button>
                 </div>
             </div>
         </div>
@@ -788,7 +926,10 @@
             // Load saved data
             loadFromLocalStorage();
             
-            // Initialize dark mode toggle
+            // Initialize dark mode toggle (Matrix mode by default)
+            document.getElementById('darkModeToggle').checked = true;
+            document.body.classList.add('dark-mode');
+            
             document.getElementById('darkModeToggle').addEventListener('change', function() {
                 document.body.classList.toggle('dark-mode', this.checked);
                 saveToLocalStorage();
@@ -803,7 +944,63 @@
             // Load AI model preference
             const savedModel = localStorage.getItem('openrouter_model') || 'openai/gpt-3.5-turbo';
             document.getElementById('aiModel').value = savedModel;
+            
+            // Initialize Matrix background effect
+            createMatrixBackground();
         });
+
+        // Matrix background effect
+        function createMatrixBackground() {
+            const canvas = document.createElement('canvas');
+            canvas.id = 'matrixCanvas';
+            canvas.style.position = 'fixed';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.style.pointerEvents = 'none';
+            canvas.style.zIndex = '-1';
+            canvas.style.opacity = '0.03';
+            document.getElementById('matrixBg').appendChild(canvas);
+            
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const letters = "01";
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            const drops = [];
+            
+            for(let i = 0; i < columns; i++) {
+                drops[i] = 1;
+            }
+            
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#00ff41';
+                ctx.font = fontSize + 'px monospace';
+                
+                for(let i = 0; i < drops.length; i++) {
+                    const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    
+                    if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+            
+            setInterval(draw, 50);
+            
+            window.addEventListener('resize', function() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
 
         // ==================== API FUNCTIONS ====================
         
@@ -817,7 +1014,7 @@
                         localStorage.setItem('openrouter_api_key', apiKey);
                         updateApiStatus('Auto-loaded from APIkey.txt', 'success');
                         document.getElementById('apiStatusBadge').className = 'status-badge status-connected';
-                        document.getElementById('apiStatusBadge').textContent = 'Connected';
+                        document.getElementById('apiStatusBadge').textContent = 'CONNECTED';
                         setTimeout(() => testAPI(), 1000);
                         return true;
                     }
@@ -878,7 +1075,7 @@
             const endpoint = document.getElementById('endpoint').value;
             
             if (!classification || !caseId || !endpoint) {
-                showAIOutput('❌ Please fill in Classification, Case ID, and Endpoint fields first.', 'danger');
+                showAIOutput('❌ PLEASE FILL IN CLASSIFICATION, CASE ID, AND ENDPOINT FIELDS FIRST.', 'danger');
                 return;
             }
             
@@ -914,7 +1111,7 @@
             
             if (result) {
                 document.getElementById('reportOutput').value = result;
-                showAIOutput('✅ Complete incident report generated successfully!', 'success');
+                showAIOutput('✅ COMPLETE INCIDENT REPORT GENERATED SUCCESSFULLY!', 'success');
                 
                 // Auto-fill any missing classification reason
                 if (!document.getElementById('classificationReason').value.trim()) {
@@ -1025,7 +1222,7 @@
             
             // Display IOCs
             if (iocs.ips.length > 0) {
-                html += `<div class="mb-2"><strong>IP Addresses:</strong><br>`;
+                html += `<div class="mb-2"><strong>IP ADDRESSES:</strong><br>`;
                 iocs.ips.forEach(ip => {
                     html += `<span class="ioc-badge">${ip}</span>`;
                 });
@@ -1033,7 +1230,7 @@
             }
             
             if (iocs.domains.length > 0) {
-                html += `<div class="mb-2"><strong>Domains:</strong><br>`;
+                html += `<div class="mb-2"><strong>DOMAINS:</strong><br>`;
                 iocs.domains.forEach(domain => {
                     html += `<span class="ioc-badge">${domain}</span>`;
                 });
@@ -1041,7 +1238,7 @@
             }
             
             if (iocs.urls.length > 0) {
-                html += `<div class="mb-2"><strong>URLs:</strong><br>`;
+                html += `<div class="mb-2"><strong>URLS:</strong><br>`;
                 iocs.urls.forEach(url => {
                     html += `<span class="ioc-badge">${url}</span>`;
                 });
@@ -1051,7 +1248,7 @@
             // Hashes
             let allHashes = [...iocs.hashes.md5, ...iocs.hashes.sha1, ...iocs.hashes.sha256];
             if (allHashes.length > 0) {
-                html += `<div class="mb-2"><strong>File Hashes:</strong><br>`;
+                html += `<div class="mb-2"><strong>FILE HASHES:</strong><br>`;
                 allHashes.forEach(hash => {
                     html += `<span class="ioc-badge">${hash.substring(0, 12)}...</span>`;
                 });
@@ -1067,82 +1264,82 @@
         function mapToMitreATTACK(classification) {
             const mitreMapping = {
                 // Initial Access (TA0001)
-                'Phishing (Spearphishing Link/Attachment)': ['T1566', 'Phishing'],
-                'Malicious Email (No interaction confirmed)': ['T1566', 'Phishing'],
-                'Exploit Public-Facing Application': ['T1190', 'Exploit Public-Facing Application'],
-                'External Remote Services (RDP/VPN brute force)': ['T1133', 'External Remote Services'],
-                'Valid Accounts (Credential-Based Attack)': ['T1078', 'Valid Accounts'],
-                'Drive-by Compromise': ['T1189', 'Drive-by Compromise'],
-                'Supply Chain Compromise': ['T1195', 'Supply Chain Compromise'],
+                'PHISHING (SPEARPHISHING LINK/ATTACHMENT)': ['T1566', 'PHISHING'],
+                'MALICIOUS EMAIL (NO INTERACTION CONFIRMED)': ['T1566', 'PHISHING'],
+                'EXPLOIT PUBLIC-FACING APPLICATION': ['T1190', 'EXPLOIT PUBLIC-FACING APPLICATION'],
+                'EXTERNAL REMOTE SERVICES (RDP/VPN BRUTE FORCE)': ['T1133', 'EXTERNAL REMOTE SERVICES'],
+                'VALID ACCOUNTS (CREDENTIAL-BASED ATTACK)': ['T1078', 'VALID ACCOUNTS'],
+                'DRIVE-BY COMPROMISE': ['T1189', 'DRIVE-BY COMPROMISE'],
+                'SUPPLY CHAIN COMPROMISE': ['T1195', 'SUPPLY CHAIN COMPROMISE'],
                 
                 // Execution (TA0002)
-                'Malware Execution': ['T1204', 'User Execution'],
-                'Command and Scripting Interpreter': ['T1059', 'Command and Scripting Interpreter'],
-                'User Execution (double-clicked file)': ['T1204', 'User Execution'],
-                'Exploitation for Client Execution': ['T1203', 'Exploitation for Client Execution'],
-                'Scheduled Task/Job': ['T1053', 'Scheduled Task/Job'],
+                'MALWARE EXECUTION': ['T1204', 'USER EXECUTION'],
+                'COMMAND AND SCRIPTING INTERPRETER': ['T1059', 'COMMAND AND SCRIPTING INTERPRETER'],
+                'USER EXECUTION (DOUBLE-CLICKED FILE)': ['T1204', 'USER EXECUTION'],
+                'EXPLOITATION FOR CLIENT EXECUTION': ['T1203', 'EXPLOITATION FOR CLIENT EXECUTION'],
+                'SCHEDULED TASK/JOB': ['T1053', 'SCHEDULED TASK/JOB'],
                 
                 // Persistence (TA0003)
-                'Account Manipulation': ['T1098', 'Account Manipulation'],
-                'Boot or Logon Autostart Execution': ['T1547', 'Boot or Logon Autostart Execution'],
-                'Valid Accounts': ['T1078', 'Valid Accounts'],
+                'ACCOUNT MANIPULATION': ['T1098', 'ACCOUNT MANIPULATION'],
+                'BOOT OR LOGON AUTOSTART EXECUTION': ['T1547', 'BOOT OR LOGON AUTOSTART EXECUTION'],
+                'VALID ACCOUNTS': ['T1078', 'VALID ACCOUNTS'],
                 
                 // Privilege Escalation (TA0004)
-                'Exploitation for Privilege Escalation': ['T1068', 'Exploitation for Privilege Escalation'],
-                'Process Injection': ['T1055', 'Process Injection'],
-                'Access Token Manipulation': ['T1134', 'Access Token Manipulation'],
+                'EXPLOITATION FOR PRIVILEGE ESCALATION': ['T1068', 'EXPLOITATION FOR PRIVILEGE ESCALATION'],
+                'PROCESS INJECTION': ['T1055', 'PROCESS INJECTION'],
+                'ACCESS TOKEN MANIPULATION': ['T1134', 'ACCESS TOKEN MANIPULATION'],
                 
                 // Defense Evasion (TA0005)
-                'Obfuscated Files or Information': ['T1027', 'Obfuscated Files or Information'],
-                'Impair Defenses (AV/EDR tampering)': ['T1562', 'Impair Defenses'],
-                'Signed Binary Proxy Execution': ['T1218', 'Signed Binary Proxy Execution'],
-                'Indicator Removal': ['T1070', 'Indicator Removal'],
+                'OBFUSCATED FILES OR INFORMATION': ['T1027', 'OBFUSCATED FILES OR INFORMATION'],
+                'IMPAIR DEFENSES (AV/EDR TAMPERING)': ['T1562', 'IMPAIR DEFENSES'],
+                'SIGNED BINARY PROXY EXECUTION': ['T1218', 'SIGNED BINARY PROXY EXECUTION'],
+                'INDICATOR REMOVAL': ['T1070', 'INDICATOR REMOVAL'],
                 
                 // Credential Access (TA0006)
-                'Credential Dumping': ['T1003', 'OS Credential Dumping'],
-                'Brute Force': ['T1110', 'Brute Force'],
-                'OS Credential Dumping': ['T1003', 'OS Credential Dumping'],
-                'Steal or Forge Kerberos Tickets': ['T1558', 'Steal or Forge Kerberos Tickets'],
+                'CREDENTIAL DUMPING': ['T1003', 'OS CREDENTIAL DUMPING'],
+                'BRUTE FORCE': ['T1110', 'BRUTE FORCE'],
+                'OS CREDENTIAL DUMPING': ['T1003', 'OS CREDENTIAL DUMPING'],
+                'STEAL OR FORGE KERBEROS TICKETS': ['T1558', 'STEAL OR FORGE KERBEROS TICKETS'],
                 
                 // Discovery (TA0007)
-                'Network Service Discovery': ['T1046', 'Network Service Discovery'],
-                'System Information Discovery': ['T1082', 'System Information Discovery'],
-                'Account Discovery': ['T1087', 'Account Discovery'],
-                'File and Directory Discovery': ['T1083', 'File and Directory Discovery'],
+                'NETWORK SERVICE DISCOVERY': ['T1046', 'NETWORK SERVICE DISCOVERY'],
+                'SYSTEM INFORMATION DISCOVERY': ['T1082', 'SYSTEM INFORMATION DISCOVERY'],
+                'ACCOUNT DISCOVERY': ['T1087', 'ACCOUNT DISCOVERY'],
+                'FILE AND DIRECTORY DISCOVERY': ['T1083', 'FILE AND DIRECTORY DISCOVERY'],
                 
                 // Lateral Movement (TA0008)
-                'Remote Services (SMB, RPC, RDP)': ['T1021', 'Remote Services'],
-                'Internal Spearphishing': ['T1534', 'Internal Spearphishing'],
-                'Replication Through Removable Media': ['T1091', 'Replication Through Removable Media'],
+                'REMOTE SERVICES (SMB, RPC, RDP)': ['T1021', 'REMOTE SERVICES'],
+                'INTERNAL SPEARPHISHING': ['T1534', 'INTERNAL SPEARPHISHING'],
+                'REPLICATION THROUGH REMOVABLE MEDIA': ['T1091', 'REPLICATION THROUGH REMOVABLE MEDIA'],
                 
                 // Collection (TA0009)
-                'Data from Local System': ['T1005', 'Data from Local System'],
-                'Email Collection': ['T1114', 'Email Collection'],
-                'Screen Capture': ['T1113', 'Screen Capture'],
-                'Audio Capture': ['T1123', 'Audio Capture'],
+                'DATA FROM LOCAL SYSTEM': ['T1005', 'DATA FROM LOCAL SYSTEM'],
+                'EMAIL COLLECTION': ['T1114', 'EMAIL COLLECTION'],
+                'SCREEN CAPTURE': ['T1113', 'SCREEN CAPTURE'],
+                'AUDIO CAPTURE': ['T1123', 'AUDIO CAPTURE'],
                 
                 // Exfiltration (TA0010)
-                'Exfiltration Over C2 Channel': ['T1041', 'Exfiltration Over C2 Channel'],
-                'Automated Exfiltration': ['T1020', 'Automated Exfiltration'],
-                'Exfiltration Over Web Service': ['T1048', 'Exfiltration Over Web Service'],
+                'EXFILTRATION OVER C2 CHANNEL': ['T1041', 'EXFILTRATION OVER C2 CHANNEL'],
+                'AUTOMATED EXFILTRATION': ['T1020', 'AUTOMATED EXFILTRATION'],
+                'EXFILTRATION OVER WEB SERVICE': ['T1048', 'EXFILTRATION OVER WEB SERVICE'],
                 
                 // Impact (TA0040)
-                'Data Encrypted for Impact (Ransomware)': ['T1486', 'Data Encrypted for Impact'],
-                'Service Stop (DoS)': ['T1489', 'Service Stop'],
-                'Defacement': ['T1491', 'Defacement'],
-                'Data Destruction': ['T1485', 'Data Destruction'],
+                'DATA ENCRYPTED FOR IMPACT (RANSOMWARE)': ['T1486', 'DATA ENCRYPTED FOR IMPACT'],
+                'SERVICE STOP (DOS)': ['T1489', 'SERVICE STOP'],
+                'DEFACEMENT': ['T1491', 'DEFACEMENT'],
+                'DATA DESTRUCTION': ['T1485', 'DATA DESTRUCTION'],
                 
                 // Other Categories
-                'Policy Violation': ['T1078', 'Valid Accounts'],
-                'Reconnaissance / Scanning': ['T1595', 'Active Scanning'],
-                'Suspicious Network Activity': ['T1046', 'Network Service Discovery'],
-                'False Positive': ['N/A', 'No MITRE Mapping'],
-                'Test / Drill': ['N/A', 'No MITRE Mapping'],
-                'Data Spillage': ['T1530', 'Data from Cloud Storage'],
-                'Insider Threat Indicator': ['T1078', 'Valid Accounts']
+                'POLICY VIOLATION': ['T1078', 'VALID ACCOUNTS'],
+                'RECONNAISSANCE / SCANNING': ['T1595', 'ACTIVE SCANNING'],
+                'SUSPICIOUS NETWORK ACTIVITY': ['T1046', 'NETWORK SERVICE DISCOVERY'],
+                'FALSE POSITIVE': ['N/A', 'NO MITRE MAPPING'],
+                'TEST / DRILL': ['N/A', 'NO MITRE MAPPING'],
+                'DATA SPILLAGE': ['T1530', 'DATA FROM CLOUD STORAGE'],
+                'INSIDER THREAT INDICATOR': ['T1078', 'VALID ACCOUNTS']
             };
             
-            return mitreMapping[classification] || ['TBD', 'To be determined'];
+            return mitreMapping[classification] || ['TBD', 'TO BE DETERMINED'];
         }
         
         // ==================== ENHANCED AI PROMPT ====================
@@ -1151,24 +1348,24 @@
             const status = formData.status;
             const analystName = document.getElementById('analystName').value;
             
-            let prompt = `Generate a complete SOC Incident Report as an L1 Analyst would write it for the team.
+            let prompt = `GENERATE A COMPLETE SOC INCIDENT REPORT AS AN L1 ANALYST WOULD WRITE IT FOR THE TEAM.
 
 ANALYST: ${analystName}
-CASE ID: ${formData.caseId || 'Not specified'}
-DETECTION SOURCE: ${formData.endpoint || 'Not specified'}
+CASE ID: ${formData.caseId || 'NOT SPECIFIED'}
+DETECTION SOURCE: ${formData.endpoint || 'NOT SPECIFIED'}
 STATUS: ${status}
 PRIORITY: ${formData.priority}
-CLASSIFICATION: ${formData.classification || 'Not classified'}
+CLASSIFICATION: ${formData.classification || 'NOT CLASSIFIED'}
 
 MITRE ATT&CK MAPPING:
-- Technique ID: ${mitreMapping[0]}
-- Technique Name: ${mitreMapping[1]}
-- Tactic: ${formData.classification.includes('TA') ? formData.classification.split(' ')[0] : 'TBD'}
+- TECHNIQUE ID: ${mitreMapping[0]}
+- TECHNIQUE NAME: ${mitreMapping[1]}
+- TACTIC: ${formData.classification.includes('TA') ? formData.classification.split(' ')[0] : 'TBD'}
 
 TIMELINE:
-Created: ${formData.dateCreated || 'Not specified'}
-${status === 'Resolved' ? `Resolved: ${formData.dateResolved || 'Not specified'}` : ''}
-${formData.timeToResolve ? `Time to Resolve: ${formData.timeToResolve}` : ''}`;
+CREATED: ${formData.dateCreated || 'NOT SPECIFIED'}
+${status === 'RESOLVED' ? `RESOLVED: ${formData.dateResolved || 'NOT SPECIFIED'}` : ''}
+${formData.timeToResolve ? `TIME TO RESOLVE: ${formData.timeToResolve}` : ''}`;
 
             // Add IOCs section
             let iocCount = 0;
@@ -1180,31 +1377,31 @@ ${formData.timeToResolve ? `Time to Resolve: ${formData.timeToResolve}` : ''}`;
             iocCount += iocs.files.length;
             
             if (iocCount > 0) {
-                prompt += `\n\nEXTRACTED INDICATORS OF COMPROMISE (IOCs):`;
+                prompt += `\n\nEXTRACTED INDICATORS OF COMPROMISE (IOCS):`;
                 
                 if (iocs.ips.length > 0) {
-                    prompt += `\nIP Addresses: ${iocs.ips.join(', ')}`;
+                    prompt += `\nIP ADDRESSES: ${iocs.ips.join(', ')}`;
                 }
                 if (iocs.domains.length > 0) {
-                    prompt += `\nDomains: ${iocs.domains.join(', ')}`;
+                    prompt += `\nDOMAINS: ${iocs.domains.join(', ')}`;
                 }
                 if (iocs.urls.length > 0) {
-                    prompt += `\nURLs: ${iocs.urls.join(', ')}`;
+                    prompt += `\nURLS: ${iocs.urls.join(', ')}`;
                 }
                 if (iocs.hashes.md5.length > 0) {
-                    prompt += `\nMD5 Hashes: ${iocs.hashes.md5.join(', ')}`;
+                    prompt += `\nMD5 HASHES: ${iocs.hashes.md5.join(', ')}`;
                 }
                 if (iocs.hashes.sha1.length > 0) {
-                    prompt += `\nSHA1 Hashes: ${iocs.hashes.sha1.join(', ')}`;
+                    prompt += `\nSHA1 HASHES: ${iocs.hashes.sha1.join(', ')}`;
                 }
                 if (iocs.hashes.sha256.length > 0) {
-                    prompt += `\nSHA256 Hashes: ${iocs.hashes.sha256.join(', ')}`;
+                    prompt += `\nSHA256 HASHES: ${iocs.hashes.sha256.join(', ')}`;
                 }
                 if (iocs.emails.length > 0) {
-                    prompt += `\nEmail Addresses: ${iocs.emails.join(', ')}`;
+                    prompt += `\nEMAIL ADDRESSES: ${iocs.emails.join(', ')}`;
                 }
                 if (iocs.files.length > 0) {
-                    prompt += `\nSuspicious Files: ${iocs.files.join(', ')}`;
+                    prompt += `\nSUSPICIOUS FILES: ${iocs.files.join(', ')}`;
                 }
             }
 
@@ -1216,7 +1413,7 @@ CONFIRMED:`;
                     prompt += `\n• ${ev.type}: ${ev.detail} ${ev.source ? `(${ev.source})` : ''}`;
                 });
             } else {
-                prompt += '\n• No confirmed evidence documented';
+                prompt += '\n• NO CONFIRMED EVIDENCE DOCUMENTED';
             }
             
             prompt += `\n\nNOT CONFIRMED (GAPS):`;
@@ -1225,20 +1422,20 @@ CONFIRMED:`;
                     prompt += `\n• ${ev.type}: ${ev.detail}`;
                 });
             } else {
-                prompt += '\n• No investigation gaps documented';
+                prompt += '\n• NO INVESTIGATION GAPS DOCUMENTED';
             }
             
             // Add investigation response section
             if (formData.timelineActions || formData.containmentAction || formData.eradicationRemediation) {
                 prompt += `\n\nINVESTIGATION RESPONSE:`;
                 if (formData.timelineActions) {
-                    prompt += `\nTimeline & Actions: ${formData.timelineActions}`;
+                    prompt += `\nTIMELINE & ACTIONS: ${formData.timelineActions}`;
                 }
                 if (formData.containmentAction) {
-                    prompt += `\nContainment Action: ${formData.containmentAction}`;
+                    prompt += `\nCONTAINMENT ACTION: ${formData.containmentAction}`;
                 }
                 if (formData.eradicationRemediation) {
-                    prompt += `\nEradication & Remediation: ${formData.eradicationRemediation}`;
+                    prompt += `\nERADICATION & REMEDIATION: ${formData.eradicationRemediation}`;
                 }
             }
             
@@ -1248,25 +1445,25 @@ CONFIRMED:`;
             }
             
             // Add actions if resolved
-            if (status === 'Resolved' && formData.actions.length > 0) {
+            if (status === 'RESOLVED' && formData.actions.length > 0) {
                 prompt += `\n\nACTIONS TAKEN (L1):`;
                 formData.actions.forEach(action => {
-                    prompt += `\n• ${action.verb} ${action.result ? `- Result: ${action.result}` : ''} ${action.tool ? `(Tool: ${action.tool})` : ''}`;
+                    prompt += `\n• ${action.verb} ${action.result ? `- RESULT: ${action.result}` : ''} ${action.tool ? `(TOOL: ${action.tool})` : ''}`;
                 });
             }
             
             // Add resolution details if available
             if (formData.containment || formData.eradication || formData.recovery) {
                 prompt += `\n\nRESPONSE ACTIONS:`;
-                if (formData.containment) prompt += `\nContainment: ${formData.containment}`;
-                if (formData.eradication) prompt += `\nEradication: ${formData.eradication}`;
-                if (formData.recovery) prompt += `\nRecovery: ${formData.recovery}`;
+                if (formData.containment) prompt += `\nCONTAINMENT: ${formData.containment}`;
+                if (formData.eradication) prompt += `\nERADICATION: ${formData.eradication}`;
+                if (formData.recovery) prompt += `\nRECOVERY: ${formData.recovery}`;
             }
             
             // Add escalation info
             if (formData.needsEscalation === 'YES') {
-                prompt += `\n\nESCALATION REQUIRED: Yes`;
-                if (formData.escalationReason) prompt += `\nReason: ${formData.escalationReason}`;
+                prompt += `\n\nESCALATION REQUIRED: YES`;
+                if (formData.escalationReason) prompt += `\nREASON: ${formData.escalationReason}`;
             }
             
             // Add recommendations
@@ -1276,25 +1473,25 @@ CONFIRMED:`;
             
             // Add missing details note
             if (missingDetails.length > 0) {
-                prompt += `\n\nNOTE: The following details were not provided in the form and should be acquired for a complete report:`;
+                prompt += `\n\nNOTE: THE FOLLOWING DETAILS WERE NOT PROVIDED IN THE FORM AND SHOULD BE ACQUIRED FOR A COMPLETE REPORT:`;
                 missingDetails.forEach(item => {
                     prompt += `\n• ${item}`;
                 });
             }
             
-            prompt += `\n\nGenerate a professional SOC incident report with the following structure:
-1. EXECUTIVE SUMMARY (brief overview of what happened, MITRE ATT&CK mapping)
-2. INCIDENT DETAILS (case ID, timeline, classification, priority)
-3. INDICATORS OF COMPROMISE (IOCs extracted from evidence)
-4. INVESTIGATION RESPONSE (timeline, containment, eradication actions)
-5. EVIDENCE & FINDINGS (what was found, confirmed/unconfirmed)
-6. ANALYSIS (L1 assessment and decision logic, MITRE ATT&CK context)
-7. ACTIONS TAKEN (what was done, tools used, results)
-8. IMPACT ASSESSMENT (business/technical impact)
-9. RECOMMENDATIONS (next steps, improvements, IOC blocking recommendations)
-10. CLOSURE (status, escalation needs, prepared by ${analystName})
+            prompt += `\n\nGENERATE A PROFESSIONAL SOC INCIDENT REPORT WITH THE FOLLOWING STRUCTURE:
+1. EXECUTIVE SUMMARY (BRIEF OVERVIEW OF WHAT HAPPENED, MITRE ATT&CK MAPPING)
+2. INCIDENT DETAILS (CASE ID, TIMELINE, CLASSIFICATION, PRIORITY)
+3. INDICATORS OF COMPROMISE (IOCS EXTRACTED FROM EVIDENCE)
+4. INVESTIGATION RESPONSE (TIMELINE, CONTAINMENT, ERADICATION ACTIONS)
+5. EVIDENCE & FINDINGS (WHAT WAS FOUND, CONFIRMED/UNCONFIRMED)
+6. ANALYSIS (L1 ASSESSMENT AND DECISION LOGIC, MITRE ATT&CK CONTEXT)
+7. ACTIONS TAKEN (WHAT WAS DONE, TOOLS USED, RESULTS)
+8. IMPACT ASSESSMENT (BUSINESS/TECHNICAL IMPACT)
+9. RECOMMENDATIONS (NEXT STEPS, IMPROVEMENTS, IOC BLOCKING RECOMMENDATIONS)
+10. CLOSURE (STATUS, ESCALATION NEEDS, PREPARED BY ${analystName})
 
-Write in clear, concise language without unnecessary symbols or markdown. Include the analyst name in appropriate sections.`;
+WRITE IN CLEAR, CONCISE LANGUAGE WITHOUT UNNECESSARY SYMBOLS OR MARKDOWN. INCLUDE THE ANALYST NAME IN APPROPRIATE SECTIONS.`;
             
             return prompt;
         }
@@ -1352,28 +1549,28 @@ Write in clear, concise language without unnecessary symbols or markdown. Includ
             const missing = [];
             
             // Critical missing details
-            if (!formData.classification) missing.push("Classification (required for all incidents)");
-            if (!formData.caseId) missing.push("Case ID from SIEM (required for tracking)");
-            if (!formData.endpoint || formData.endpoint === "-- Select Endpoint --") missing.push("Detection source/endpoint (required for context)");
-            if (!formData.classificationReason) missing.push("Reason for classification (explains why this classification was chosen)");
+            if (!formData.classification) missing.push("CLASSIFICATION (REQUIRED FOR ALL INCIDENTS)");
+            if (!formData.caseId) missing.push("CASE ID FROM SIEM (REQUIRED FOR TRACKING)");
+            if (!formData.endpoint || formData.endpoint === "-- SELECT ENDPOINT --") missing.push("DETECTION SOURCE/ENDPOINT (REQUIRED FOR CONTEXT)");
+            if (!formData.classificationReason) missing.push("REASON FOR CLASSIFICATION (EXPLAINS WHY THIS CLASSIFICATION WAS CHOSEN)");
             
             // Evidence related
-            if (formData.confirmedEvidence.length === 0) missing.push("Confirmed evidence data points (what you actually found)");
+            if (formData.confirmedEvidence.length === 0) missing.push("CONFIRMED EVIDENCE DATA POINTS (WHAT YOU ACTUALLY FOUND)");
             
             // Investigation response
-            if (!formData.timelineActions) missing.push("Timeline & Actions (chronological investigation steps)");
-            if (!formData.containmentAction) missing.push("Containment Action (immediate containment steps)");
-            if (!formData.eradicationRemediation) missing.push("Eradication & Remediation (root cause removal)");
+            if (!formData.timelineActions) missing.push("TIMELINE & ACTIONS (CHRONOLOGICAL INVESTIGATION STEPS)");
+            if (!formData.containmentAction) missing.push("CONTAINMENT ACTION (IMMEDIATE CONTAINMENT STEPS)");
+            if (!formData.eradicationRemediation) missing.push("ERADICATION & REMEDIATION (ROOT CAUSE REMOVAL)");
             
             // Status specific
-            if (formData.status === 'Resolved') {
-                if (!formData.containment) missing.push("Containment actions taken");
-                if (!formData.eradication) missing.push("Eradication steps performed");
-                if (!formData.timeToResolve) missing.push("Total time to resolve (for metrics)");
-                if (formData.actions.length === 0) missing.push("Specific actions taken (what you did)");
+            if (formData.status === 'RESOLVED') {
+                if (!formData.containment) missing.push("CONTAINMENT ACTIONS TAKEN");
+                if (!formData.eradication) missing.push("ERADICATION STEPS PERFORMED");
+                if (!formData.timeToResolve) missing.push("TOTAL TIME TO RESOLVE (FOR METRICS)");
+                if (formData.actions.length === 0) missing.push("SPECIFIC ACTIONS TAKEN (WHAT YOU DID)");
             } else {
-                if (!formData.determineOutcome) missing.push("Determine outcome logic (decision criteria)");
-                if (formData.needsEscalation === 'YES' && !formData.escalationReason) missing.push("Escalation justification (why L2/L3 needed)");
+                if (!formData.determineOutcome) missing.push("DETERMINE OUTCOME LOGIC (DECISION CRITERIA)");
+                if (formData.needsEscalation === 'YES' && !formData.escalationReason) missing.push("ESCALATION JUSTIFICATION (WHY L2/L3 NEEDED)");
             }
             
             return missing;
@@ -1475,7 +1672,7 @@ Write in clear, concise language without unnecessary symbols or markdown. Includ
                 if (!apiKey) {
                     const loaded = await loadApiKeyFromFile();
                     if (!loaded) {
-                        showAIOutput('❌ No API key found. Please check APIkey.txt file or enter manually.', 'danger');
+                        showAIOutput('❌ NO API KEY FOUND. PLEASE CHECK APIKEY.TXT FILE OR ENTER MANUALLY.', 'danger');
                         return null;
                     }
                     apiKey = localStorage.getItem('openrouter_api_key');
@@ -1483,7 +1680,7 @@ Write in clear, concise language without unnecessary symbols or markdown. Includ
             } else {
                 apiKey = document.getElementById('apiKeyManual').value.trim();
                 if (!apiKey) {
-                    showAIOutput('❌ Please enter your OpenRouter API key.', 'danger');
+                    showAIOutput('❌ PLEASE ENTER YOUR OPENROUTER API KEY.', 'danger');
                     return null;
                 }
                 localStorage.setItem('openrouter_api_key', apiKey);
@@ -1513,7 +1710,7 @@ Write in clear, concise language without unnecessary symbols or markdown. Includ
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${apiKey}`,
                         'HTTP-Referer': window.location.origin,
-                        'X-Title': 'SOC Report Assistant'
+                        'X-Title': 'SOC REPORT ASSISTANT'
                     },
                     body: JSON.stringify({
                         model: model,
@@ -1524,15 +1721,15 @@ Write in clear, concise language without unnecessary symbols or markdown. Includ
                 });
                 
                 if (!response.ok) {
-                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                    throw new Error(`API ERROR: ${response.status} ${response.statusText}`);
                 }
                 
                 const data = await response.json();
                 return data.choices[0].message.content;
                 
             } catch (error) {
-                console.error('OpenRouter API Error:', error);
-                showAIOutput(`❌ API Error: ${error.message}`, 'danger');
+                console.error('OPENROUTER API ERROR:', error);
+                showAIOutput(`❌ API ERROR: ${error.message}`, 'danger');
                 return null;
             }
         }
@@ -1566,19 +1763,19 @@ Write in clear, concise language without unnecessary symbols or markdown. Includ
         async function testAPI() {
             showThinking('testApiBtn', true);
             
-            const prompt = "Please respond with 'API connection successful' if you can read this message.";
-            const systemPrompt = "You are a test assistant. Respond only with the confirmation message.";
+            const prompt = "PLEASE RESPOND WITH 'API CONNECTION SUCCESSFUL' IF YOU CAN READ THIS MESSAGE.";
+            const systemPrompt = "YOU ARE A TEST ASSISTANT. RESPOND ONLY WITH THE CONFIRMATION MESSAGE.";
             
             const result = await callOpenRouterAPI(prompt, systemPrompt);
             
             showThinking('testApiBtn', false);
             
             if (result && result.includes('successful')) {
-                updateApiStatus('✅ API connection successful! You can now use AI features.', 'success');
+                updateApiStatus('✅ API CONNECTION SUCCESSFUL! YOU CAN NOW USE AI FEATURES.', 'success');
                 document.getElementById('apiStatusBadge').className = 'status-badge status-connected';
-                document.getElementById('apiStatusBadge').textContent = 'Connected';
+                document.getElementById('apiStatusBadge').textContent = 'CONNECTED';
             } else if (result) {
-                updateApiStatus('⚠️ API responded but with unexpected message: ' + result, 'warning');
+                updateApiStatus('⚠️ API RESPONDED BUT WITH UNEXPECTED MESSAGE: ' + result, 'warning');
             }
         }
         
@@ -1610,7 +1807,7 @@ Write in clear, concise language without unnecessary symbols or markdown. Includ
             const source = document.getElementById('dpSource').value;
             
             if (!dpType || !detail) {
-                alert('Please fill in at least Type and Detail fields');
+                alert('PLEASE FILL IN AT LEAST TYPE AND DETAIL FIELDS');
                 return;
             }
             
@@ -1636,7 +1833,7 @@ Write in clear, concise language without unnecessary symbols or markdown. Includ
             const result = document.getElementById('actionResult').value;
             
             if (!verb) {
-                alert('Please enter an action');
+                alert('PLEASE ENTER AN ACTION');
                 return;
             }
             
@@ -1680,8 +1877,8 @@ Write in clear, concise language without unnecessary symbols or markdown. Includ
                 div.className = 'log-entry';
                 div.innerHTML = `
                     <strong>${dp.type}</strong>: ${dp.detail}
-                    ${dp.query ? `<br><small>Query: ${dp.query}</small>` : ''}
-                    ${dp.source ? `<br><small>Source: ${dp.source}</small>` : ''}
+                    ${dp.query ? `<br><small>QUERY: ${dp.query}</small>` : ''}
+                    ${dp.source ? `<br><small>SOURCE: ${dp.source}</small>` : ''}
                     <button class="delete-btn" onclick="deleteDataPoint('${type}', ${dp.id})">✕</button>
                 `;
                 container.appendChild(div);
@@ -1698,9 +1895,9 @@ Write in clear, concise language without unnecessary symbols or markdown. Includ
                 const div = document.createElement('div');
                 div.className = 'action-entry';
                 div.innerHTML = `
-                    <strong>${action.type || 'Action'}</strong>: ${action.verb}
-                    ${action.tool ? `<br><small>Tool: ${action.tool}</small>` : ''}
-                    ${action.result ? `<br><small>Result: ${action.result}</small>` : ''}
+                    <strong>${action.type || 'ACTION'}</strong>: ${action.verb}
+                    ${action.tool ? `<br><small>TOOL: ${action.tool}</small>` : ''}
+                    ${action.result ? `<br><small>RESULT: ${action.result}</small>` : ''}
                     <button class="delete-btn" onclick="deleteAction(${action.id})">✕</button>
                 `;
                 container.appendChild(div);
@@ -1714,7 +1911,7 @@ Write in clear, concise language without unnecessary symbols or markdown. Includ
             const resolvedSection = document.getElementById('resolvedSection');
             const dateResolvedSection = document.getElementById('dateResolvedSection');
             
-            if (status === 'Resolved') {
+            if (status === 'RESOLVED') {
                 investigationSection.style.display = 'none';
                 resolvedSection.style.display = 'block';
                 dateResolvedSection.style.display = 'block';
@@ -1742,13 +1939,13 @@ Write in clear, concise language without unnecessary symbols or markdown. Includ
             const reasonField = document.getElementById('classificationReason');
             
             const reasonSuggestions = {
-                'Phishing (Spearphishing Link/Attachment)': 'Malicious email delivered with embedded link/attachment. User interaction unknown.',
-                'Malicious Email (No interaction confirmed)': 'Suspicious email reached inbox. No evidence of user interaction.',
-                'Malware Execution': 'Malicious code executed on endpoint. Containment required.',
-                'Suspicious Network Activity': 'Anomalous network traffic detected. Further investigation needed.',
-                'Policy Violation': 'User/system violated security policy. Requires review.',
-                'False Positive': 'Alert triggered incorrectly. No actual threat.',
-                'Valid Accounts (Credential-Based Attack)': 'Unauthorized access using valid credentials. Credential reset required.'
+                'PHISHING (SPEARPHISHING LINK/ATTACHMENT)': 'MALICIOUS EMAIL DELIVERED WITH EMBEDDED LINK/ATTACHMENT. USER INTERACTION UNKNOWN.',
+                'MALICIOUS EMAIL (NO INTERACTION CONFIRMED)': 'SUSPICIOUS EMAIL REACHED INBOX. NO EVIDENCE OF USER INTERACTION.',
+                'MALWARE EXECUTION': 'MALICIOUS CODE EXECUTED ON ENDPOINT. CONTAINMENT REQUIRED.',
+                'SUSPICIOUS NETWORK ACTIVITY': 'ANOMALOUS NETWORK TRAFFIC DETECTED. FURTHER INVESTIGATION NEEDED.',
+                'POLICY VIOLATION': 'USER/SYSTEM VIOLATED SECURITY POLICY. REQUIRES REVIEW.',
+                'FALSE POSITIVE': 'ALERT TRIGGERED INCORRECTLY. NO ACTUAL THREAT.',
+                'VALID ACCOUNTS (CREDENTIAL-BASED ATTACK)': 'UNAUTHORIZED ACCESS USING VALID CREDENTIALS. CREDENTIAL RESET REQUIRED.'
             };
             
             if (reasonSuggestions[classification] && !reasonField.value) {
@@ -1761,7 +1958,7 @@ Write in clear, concise language without unnecessary symbols or markdown. Includ
             const status = document.getElementById('status').value;
             let report = '';
             
-            if (status === 'Under Investigation') {
+            if (status === 'UNDER INVESTIGATION') {
                 report = generateInvestigationReport();
             } else {
                 report = generateResolvedReport();
@@ -1775,37 +1972,37 @@ Write in clear, concise language without unnecessary symbols or markdown. Includ
             const analystName = document.getElementById('analystName').value;
             
             return `INCIDENT REPORT - FOR ESCALATION
-Analyst: ${analystName}
-Case ID: ${document.getElementById('caseId').value || 'N/A'}
-Status: UNDER INVESTIGATION
-Priority: ${document.getElementById('priority').value}
-Classification: ${document.getElementById('classification').value}
-Reason for Classification: ${document.getElementById('classificationReason').value}
-Date Created: ${document.getElementById('dateCreated').value}
-Endpoint: ${document.getElementById('endpoint').value}
+ANALYST: ${analystName}
+CASE ID: ${document.getElementById('caseId').value || 'N/A'}
+STATUS: UNDER INVESTIGATION
+PRIORITY: ${document.getElementById('priority').value}
+CLASSIFICATION: ${document.getElementById('classification').value}
+REASON FOR CLASSIFICATION: ${document.getElementById('classificationReason').value}
+DATE CREATED: ${document.getElementById('dateCreated').value}
+ENDPOINT: ${document.getElementById('endpoint').value}
 
 ANALYSIS & CURRENT EVIDENCE
-Confirmed:
-${dataPoints.confirmed.map(dp => `- ${dp.type}: ${dp.detail} ${dp.source ? `(Source: ${dp.source})` : ''}`).join('\n')}
+CONFIRMED:
+${dataPoints.confirmed.map(dp => `- ${dp.type}: ${dp.detail} ${dp.source ? `(SOURCE: ${dp.source})` : ''}`).join('\n')}
 
-Not Confirmed:
+NOT CONFIRMED:
 ${dataPoints.notConfirmed.map(dp => `- ${dp.type}: ${dp.detail}`).join('\n')}
 
 INVESTIGATION RESPONSE
-Timeline & Actions: ${document.getElementById('timelineActions').value}
-Containment Action: ${document.getElementById('containmentAction').value}
-Eradication & Remediation: ${document.getElementById('eradicationRemediation').value}
+TIMELINE & ACTIONS: ${document.getElementById('timelineActions').value}
+CONTAINMENT ACTION: ${document.getElementById('containmentAction').value}
+ERADICATION & REMEDIATION: ${document.getElementById('eradicationRemediation').value}
 
 DETERMINE OUTCOME:
 ${document.getElementById('determineOutcome').value}
 
 ESCALATION DECISION:
-Needs L2/L3: ${document.getElementById('needsEscalation').value}
-${document.getElementById('needsEscalation').value === 'YES' ? `Reason: ${document.getElementById('escalationReason').value}\n` : ''}
-Recommendation: ${document.getElementById('recommendation').value}
+NEEDS L2/L3: ${document.getElementById('needsEscalation').value}
+${document.getElementById('needsEscalation').value === 'YES' ? `REASON: ${document.getElementById('escalationReason').value}\n` : ''}
+RECOMMENDATION: ${document.getElementById('recommendation').value}
 
-Report Prepared By: ${analystName}
-Incident Lead: TBD`;
+REPORT PREPARED BY: ${analystName}
+INCIDENT LEAD: TBD`;
         }
 
         function generateResolvedReport() {
@@ -1819,46 +2016,46 @@ Incident Lead: TBD`;
             ];
             
             return `INCIDENT REPORT - RESOLVED
-Analyst: ${analystName}
-Case ID: ${document.getElementById('caseId').value || 'N/A'}
-Status: RESOLVED
-Priority: ${document.getElementById('priority').value}
-Final Classification: ${document.getElementById('classification').value}
-Date Created: ${document.getElementById('dateCreated').value}
-Date Resolved: ${document.getElementById('dateResolved').value}
-Total Time to Resolve: ${document.getElementById('timeToResolve').value}
-Endpoint: ${document.getElementById('endpoint').value}
+ANALYST: ${analystName}
+CASE ID: ${document.getElementById('caseId').value || 'N/A'}
+STATUS: RESOLVED
+PRIORITY: ${document.getElementById('priority').value}
+FINAL CLASSIFICATION: ${document.getElementById('classification').value}
+DATE CREATED: ${document.getElementById('dateCreated').value}
+DATE RESOLVED: ${document.getElementById('dateResolved').value}
+TOTAL TIME TO RESOLVE: ${document.getElementById('timeToResolve').value}
+ENDPOINT: ${document.getElementById('endpoint').value}
 
-WHAT I DID (L1 Actions):
+WHAT I DID (L1 ACTIONS):
 ${actions.map(action => `- ${action.verb} ${action.result ? `(${action.result})` : ''}`).join('\n')}
 
 INVESTIGATION RESPONSE
-Timeline & Actions: ${document.getElementById('timelineActions').value}
-Containment Action: ${document.getElementById('containmentAction').value}
-Eradication & Remediation: ${document.getElementById('eradicationRemediation').value}
+TIMELINE & ACTIONS: ${document.getElementById('timelineActions').value}
+CONTAINMENT ACTION: ${document.getElementById('containmentAction').value}
+ERADICATION & REMEDIATION: ${document.getElementById('eradicationRemediation').value}
 
 RESPONSE & REMEDIATION ACTIONS:
-Containment: ${document.getElementById('containment').value}
-Eradication: ${document.getElementById('eradication').value}
-Recovery: ${document.getElementById('recovery').value}
+CONTAINMENT: ${document.getElementById('containment').value}
+ERADICATION: ${document.getElementById('eradication').value}
+RECOVERY: ${document.getElementById('recovery').value}
 
-WHAT I FOUND (Evidence):
-${dataPoints.resolved.map(dp => `- ${dp.type}: ${dp.detail} ${dp.source ? `(Source: ${dp.source})` : ''}`).join('\n')}
+WHAT I FOUND (EVIDENCE):
+${dataPoints.resolved.map(dp => `- ${dp.type}: ${dp.detail} ${dp.source ? `(SOURCE: ${dp.source})` : ''}`).join('\n')}
 
 FINAL RESULT:
-Impact: ${document.getElementById('impact').value}
-Reason: ${document.getElementById('finalReason').value}
-Needs L2/L3: ${document.getElementById('resolvedEscalation').value}
+IMPACT: ${document.getElementById('impact').value}
+REASON: ${document.getElementById('finalReason').value}
+NEEDS L2/L3: ${document.getElementById('resolvedEscalation').value}
 
 CLOSURE CHECKLIST:
-${checks[0]} All evidence collected and saved
-${checks[1]} Malicious indicators (URL/sender) blocked
-${checks[2]} User notified (if policy requires)
-${checks[3]} No further action needed
-${checks[4]} Ticket ready to close
+${checks[0]} ALL EVIDENCE COLLECTED AND SAVED
+${checks[1]} MALICIOUS INDICATORS (URL/SENDER) BLOCKED
+${checks[2]} USER NOTIFIED (IF POLICY REQUIRES)
+${checks[3]} NO FURTHER ACTION NEEDED
+${checks[4]} TICKET READY TO CLOSE
 
-Report Closed By: ${analystName}
-Closed On: ${document.getElementById('closedOn').value}`;
+REPORT CLOSED BY: ${analystName}
+CLOSED ON: ${document.getElementById('closedOn').value}`;
         }
 
         function copyToClipboard() {
@@ -1866,7 +2063,7 @@ Closed On: ${document.getElementById('closedOn').value}`;
             textarea.select();
             textarea.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(textarea.value).then(() => {
-                alert('Report copied to clipboard!');
+                alert('REPORT COPIED TO CLIPBOARD!');
             });
         }
 
@@ -1909,11 +2106,11 @@ Closed On: ${document.getElementById('closedOn').value}`;
             if (saved) {
                 const data = JSON.parse(saved);
                 
-                document.getElementById('analystName').value = data.analystName || 'Nicole Dominique Montederamos (L1 Analyst)';
+                document.getElementById('analystName').value = data.analystName || 'NICOLE DOMINIQUE MONTEDERAMOS (L1 ANALYST)';
                 document.getElementById('endpoint').value = data.endpoint || '';
                 document.getElementById('caseId').value = data.caseId || '';
-                document.getElementById('status').value = data.status || 'Under Investigation';
-                document.getElementById('priority').value = data.priority || 'Medium';
+                document.getElementById('status').value = data.status || 'UNDER INVESTIGATION';
+                document.getElementById('priority').value = data.priority || 'MEDIUM';
                 document.getElementById('classification').value = data.classification || '';
                 document.getElementById('classificationReason').value = data.classificationReason || '';
                 document.getElementById('dateCreated').value = data.dateCreated || '';
@@ -1955,7 +2152,7 @@ Closed On: ${document.getElementById('closedOn').value}`;
         }
 
         function clearAllData() {
-            if (confirm('Clear all form data? This cannot be undone.')) {
+            if (confirm('CLEAR ALL FORM DATA? THIS CANNOT BE UNDONE.')) {
                 localStorage.removeItem('socReportData');
                 location.reload();
             }
