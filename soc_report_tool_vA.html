@@ -1,0 +1,1965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOC Analyst Incident Report Assistant (L1) - AI Enhanced</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+        }
+        .dark-mode {
+            --bg-color: #212529;
+            --text-color: #f8f9fa;
+            --card-bg: #343a40;
+            --border-color: #495057;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s;
+            padding: 20px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-control, .form-select {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-color: var(--border-color);
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        .btn-outline-secondary {
+            color: var(--text-color);
+            border-color: var(--border-color);
+        }
+        .btn-outline-secondary:hover {
+            background-color: var(--border-color);
+            color: var(--text-color);
+        }
+        .log-entry, .action-entry {
+            background: rgba(13, 110, 253, 0.1);
+            border-left: 4px solid #0d6efd;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            position: relative;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: transparent;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .ai-section {
+            background: rgba(25, 135, 84, 0.1);
+            border-left: 4px solid #198754;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .resolved-section {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        textarea {
+            min-height: 100px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .modal-content {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+        .data-point-form {
+            background: rgba(0,0,0,0.05);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .api-key-input {
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        .spinner-border {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.5rem;
+        }
+        .status-badge {
+            font-size: 0.75em;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .status-connected {
+            background-color: #198754;
+            color: white;
+        }
+        .status-disconnected {
+            background-color: #6c757d;
+            color: white;
+        }
+        .ai-assistant-btn {
+            background: linear-gradient(135deg, #198754 0%, #0d6efd 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px 24px;
+            font-size: 1.1em;
+        }
+        .missing-details-alert {
+            background: rgba(255, 193, 7, 0.2);
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .mitre-badge {
+            background-color: #6f42c1;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        .ioc-badge {
+            background-color: #dc3545;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: 500;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+        .timeline-item {
+            border-left: 3px solid #0d6efd;
+            padding-left: 15px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: #0d6efd;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">🤖 SOC Incident Report Assistant (L1) - AI Enhanced</h1>
+            <div class="d-flex align-items-center gap-3">
+                <span>Dark Mode</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+                <button class="btn btn-sm btn-outline-danger" onclick="clearAllData()">Clear Form</button>
+            </div>
+        </div>
+
+        <!-- Main Form -->
+        <div class="row">
+            <div class="col-md-8">
+                <!-- Basic Info Card -->
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">INCIDENT REPORT FORM</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Analyst Name</label>
+                                <input type="text" class="form-control" id="analystName" value="Nicole Dominique Montederamos (L1 Analyst)">
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Endpoint (Detection Source)</label>
+                                <select class="form-select" id="endpoint">
+                                    <option value="">-- Select Endpoint --</option>
+                                    <optgroup label="Network Security">
+                                        <option>Firewall (Perimeter)</option>
+                                        <option>NGFW (Next-Generation Firewall)</option>
+                                        <option>WAF (Web Application Firewall)</option>
+                                        <option>IPS/IDS</option>
+                                        <option>VPN Gateway</option>
+                                        <option>Proxy Server</option>
+                                        <option>Email Gateway / SEG</option>
+                                        <option>DNS Filter</option>
+                                    </optgroup>
+                                    <optgroup label="Host & Endpoint">
+                                        <option>EDR (Endpoint Detection and Response)</option>
+                                        <option>AV (Antivirus)</option>
+                                        <option>HIDS</option>
+                                        <option>Windows Event Logs</option>
+                                        <option>Linux Syslog / Auditd</option>
+                                        <option>macOS Unified Logs</option>
+                                    </optgroup>
+                                    <optgroup label="Cloud & Identity">
+                                        <option>Cloud SIEM (e.g., Sentinel)</option>
+                                        <option>CSPM (Cloud Security Posture Management)</option>
+                                        <option>CASB (Cloud Access Security Broker)</option>
+                                        <option>IAM Audit Logs</option>
+                                        <option>SSO Logs (Okta, Azure AD)</option>
+                                    </optgroup>
+                                    <optgroup label="Application & Specialized">
+                                        <option>SaaS Audit Logs (M365, Google)</option>
+                                        <option>DLP (Data Loss Prevention)</option>
+                                        <option>SIEM Correlation Alert</option>
+                                        <option>Manual Report / User Notification</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Case ID (Paste from SIEM)</label>
+                                <input type="text" class="form-control" id="caseId" placeholder="e.g., ALERT-2025-1223-8817">
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="status" onchange="toggleFormSections()">
+                                    <option>Under Investigation</option>
+                                    <option>Resolved</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label class="form-label">Priority</label>
+                                <select class="form-select" id="priority">
+                                    <option>Informational</option>
+                                    <option>Low</option>
+                                    <option selected>Medium</option>
+                                    <option>High</option>
+                                    <option>Critical</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Classification</label>
+                                <select class="form-select" id="classification" onchange="updateClassificationReason()">
+                                    <option value="">-- Select Classification --</option>
+                                    <optgroup label="Initial Access (TA0001)">
+                                        <option>Phishing (Spearphishing Link/Attachment)</option>
+                                        <option>Malicious Email (No interaction confirmed)</option>
+                                        <option>Exploit Public-Facing Application</option>
+                                        <option>External Remote Services (RDP/VPN brute force)</option>
+                                        <option>Valid Accounts (Credential-Based Attack)</option>
+                                        <option>Drive-by Compromise</option>
+                                        <option>Supply Chain Compromise</option>
+                                    </optgroup>
+                                    <optgroup label="Execution (TA0002)">
+                                        <option>Malware Execution</option>
+                                        <option>Command and Scripting Interpreter</option>
+                                        <option>User Execution (double-clicked file)</option>
+                                        <option>Exploitation for Client Execution</option>
+                                        <option>Scheduled Task/Job</option>
+                                    </optgroup>
+                                    <optgroup label="Persistence (TA0003)">
+                                        <option>Account Manipulation</option>
+                                        <option>Boot or Logon Autostart Execution</option>
+                                        <option>Scheduled Task/Job</option>
+                                        <option>Valid Accounts</option>
+                                    </optgroup>
+                                    <optgroup label="Privilege Escalation (TA0004)">
+                                        <option>Exploitation for Privilege Escalation</option>
+                                        <option>Process Injection</option>
+                                        <option>Access Token Manipulation</option>
+                                    </optgroup>
+                                    <optgroup label="Defense Evasion (TA0005)">
+                                        <option>Obfuscated Files or Information</option>
+                                        <option>Impair Defenses (AV/EDR tampering)</option>
+                                        <option>Signed Binary Proxy Execution</option>
+                                        <option>Indicator Removal</option>
+                                    </optgroup>
+                                    <optgroup label="Credential Access (TA0006)">
+                                        <option>Credential Dumping</option>
+                                        <option>Brute Force</option>
+                                        <option>OS Credential Dumping</option>
+                                        <option>Steal or Forge Kerberos Tickets</option>
+                                    </optgroup>
+                                    <optgroup label="Discovery (TA0007)">
+                                        <option>Network Service Discovery</option>
+                                        <option>System Information Discovery</option>
+                                        <option>Account Discovery</option>
+                                        <option>File and Directory Discovery</option>
+                                    </optgroup>
+                                    <optgroup label="Lateral Movement (TA0008)">
+                                        <option>Remote Services (SMB, RPC, RDP)</option>
+                                        <option>Internal Spearphishing</option>
+                                        <option>Replication Through Removable Media</option>
+                                    </optgroup>
+                                    <optgroup label="Collection (TA0009)">
+                                        <option>Data from Local System</option>
+                                        <option>Email Collection</option>
+                                        <option>Screen Capture</option>
+                                        <option>Audio Capture</option>
+                                    </optgroup>
+                                    <optgroup label="Exfiltration (TA0010)">
+                                        <option>Exfiltration Over C2 Channel</option>
+                                        <option>Automated Exfiltration</option>
+                                        <option>Exfiltration Over Web Service</option>
+                                    </optgroup>
+                                    <optgroup label="Impact (TA0040)">
+                                        <option>Data Encrypted for Impact (Ransomware)</option>
+                                        <option>Service Stop (DoS)</option>
+                                        <option>Defacement</option>
+                                        <option>Data Destruction</option>
+                                    </optgroup>
+                                    <optgroup label="Other Categories">
+                                        <option>Policy Violation</option>
+                                        <option>Reconnaissance / Scanning</option>
+                                        <option>Suspicious Network Activity</option>
+                                        <option>False Positive</option>
+                                        <option>Test / Drill</option>
+                                        <option>Data Spillage</option>
+                                        <option>Insider Threat Indicator</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Reason for Classification</label>
+                                <textarea class="form-control" id="classificationReason" rows="2" placeholder="Brief explanation for the chosen classification..."></textarea>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Date Created</label>
+                                <input type="datetime-local" class="form-control" id="dateCreated" value="">
+                            </div>
+                            
+                            <div class="col-md-6" id="dateResolvedSection" style="display: none;">
+                                <label class="form-label">Date Resolved</label>
+                                <input type="datetime-local" class="form-control" id="dateResolved">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UNDER INVESTIGATION SECTION (Dynamic) -->
+                <div id="investigationSection">
+                    <div class="card">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0">ANALYSIS & CURRENT EVIDENCE</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Confirmed Evidence</label>
+                                <div id="confirmedEvidence">
+                                    <!-- Dynamic content will appear here -->
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary mt-2" onclick="showDataPointModal('confirmed')">
+                                    + ADD Confirmed Data Point
+                                </button>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Not Confirmed (Gaps)</label>
+                                <div id="notConfirmedEvidence">
+                                    <!-- Dynamic content will appear here -->
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary mt-2" onclick="showDataPointModal('notConfirmed')">
+                                    + ADD Investigation Gap
+                                </button>
+                            </div>
+                            
+                            <div class="ai-section">
+                                <h6>ANALYSIS NOTES & DETERMINE OUTCOME</h6>
+                                <textarea class="form-control" id="determineOutcome" rows="3" placeholder="Analysis notes and decision logic..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">INVESTIGATION RESPONSE</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label">Timeline & Actions</label>
+                                    <textarea class="form-control" id="timelineActions" rows="3" placeholder="Chronological timeline of investigation actions..."></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Containment Action</label>
+                                    <textarea class="form-control" id="containmentAction" rows="3" placeholder="Immediate containment steps taken..."></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Eradication & Remediation</label>
+                                    <textarea class="form-control" id="eradicationRemediation" rows="3" placeholder="Root cause removal and remediation..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0">ESCALATION DECISION</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Does this need L2/L3?</label>
+                                    <select class="form-select" id="needsEscalation" onchange="toggleEscalationReason()">
+                                        <option>NO</option>
+                                        <option>YES</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Report Prepared By</label>
+                                    <input type="text" class="form-control" id="preparedBy" value="Nicole Dominique Montederamos (L1 Analyst)" readonly>
+                                </div>
+                                <div class="col-12" id="escalationReasonSection" style="display: none;">
+                                    <label class="form-label">Why? (Escalation Justification)</label>
+                                    <textarea class="form-control" id="escalationReason" rows="2" placeholder="Reason for escalating to L2/L3..."></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Recommendation</label>
+                                    <textarea class="form-control" id="recommendation" rows="2" placeholder="Recommended next steps..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RESOLVED SECTION (Dynamic) -->
+                <div id="resolvedSection" style="display: none;">
+                    <div class="resolved-section">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">RESOLUTION DETAILS</h5>
+                            <div class="col-md-4">
+                                <label class="form-label">Total Time to Resolve</label>
+                                <input type="text" class="form-control" id="timeToResolve" placeholder="e.g., 1 hour 30 minutes">
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header bg-success text-white">
+                                <h6 class="mb-0">WHAT I DID (L1 Actions)</h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="actionsList">
+                                    <!-- Dynamic actions will appear here -->
+                                </div>
+                                <button class="btn btn-sm btn-outline-success mt-2" onclick="showActionModal()">
+                                    + ADD Action
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header bg-info text-white">
+                                <h6 class="mb-0">RESPONSE & REMEDIATION ACTIONS</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Containment</label>
+                                        <textarea class="form-control" id="containment" rows="3" placeholder="e.g., Blocked malicious domain at firewall..."></textarea>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Eradication</label>
+                                        <textarea class="form-control" id="eradication" rows="3" placeholder="e.g., Performed full antivirus scan..."></textarea>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Recovery</label>
+                                        <textarea class="form-control" id="recovery" rows="3" placeholder="e.g., Restored normal network access..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0">WHAT I FOUND (Evidence)</h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="resolvedEvidence">
+                                    <!-- Dynamic evidence will appear here -->
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary mt-2" onclick="showDataPointModal('resolved')">
+                                    + ADD Evidence Data Point
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header bg-warning text-dark">
+                                <h6 class="mb-0">FINAL RESULT & CLOSURE</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Impact</label>
+                                        <select class="form-select" id="impact">
+                                            <option>NONE</option>
+                                            <option>MINIMAL</option>
+                                            <option>MODERATE</option>
+                                            <option>SEVERE</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Does this need L2/L3?</label>
+                                        <select class="form-select" id="resolvedEscalation">
+                                            <option>NO</option>
+                                            <option>YES</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Reason</label>
+                                        <textarea class="form-control" id="finalReason" rows="2" placeholder="Explanation of impact assessment..."></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Closure Checklist</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="check1">
+                                            <label class="form-check-label">All evidence collected and saved</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="check2">
+                                            <label class="form-check-label">Malicious indicators (URL/sender) blocked</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="check3">
+                                            <label class="form-check-label">User notified (if policy requires)</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="check4" checked>
+                                            <label class="form-check-label">No further action needed</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="check5">
+                                            <label class="form-check-label">Ticket ready to close</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Report Closed By</label>
+                                        <input type="text" class="form-control" id="closedBy" value="Nicole Dominique Montederamos (L1 Analyst)" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Closed On</label>
+                                        <input type="date" class="form-control" id="closedOn">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar: AI Tools & Output -->
+            <div class="col-md-4">
+                <!-- API Configuration Card -->
+                <div class="card sticky-top" style="top: 20px;">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">🔧 OpenRouter API</h5>
+                        <span id="apiStatusBadge" class="status-badge status-disconnected">Disconnected</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">API Key Source</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="apiKeySource" id="autoApiKey" value="auto" checked onchange="toggleApiKeySource()">
+                                <label class="form-check-label" for="autoApiKey">
+                                    Auto-load from APIkey.txt
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="apiKeySource" id="manualApiKey" value="manual" onchange="toggleApiKeySource()">
+                                <label class="form-check-label" for="manualApiKey">
+                                    Enter manually
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="manualApiKeySection" style="display: none;">
+                            <div class="mb-3">
+                                <label class="form-label">API Key (Manual)</label>
+                                <input type="password" class="form-control api-key-input" id="apiKeyManual" placeholder="sk-or-xxxxxxxxxxxxxxxxxxxxxxxx">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">AI Model</label>
+                            <select class="form-select" id="aiModel">
+                                <option value="openai/gpt-3.5-turbo">GPT-3.5 Turbo (Fast & Cheap)</option>
+                                <option value="openai/gpt-4">GPT-4 (Best Quality)</option>
+                                <option value="meta-llama/llama-3.1-8b-instruct">Llama 3.1 8B (Open Source)</option>
+                                <option value="google/gemini-pro">Gemini Pro (Google)</option>
+                                <option value="anthropic/claude-3-haiku">Claude 3 Haiku (Fast)</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-outline-success w-100 mb-3" onclick="testAPI()" id="testApiBtn">
+                            🧪 Test API Connection
+                        </button>
+                        <div id="apiStatus" class="small"></div>
+                    </div>
+                </div>
+
+                <!-- AI Assistant Card -->
+                <div class="card mt-3">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">🤖 AI ASSISTANT</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2 mb-4">
+                            <button class="btn ai-assistant-btn" onclick="generateCompleteIncidentReport()" id="aiReportBtn">
+                                <span class="spinner-border spinner-border-sm d-none" id="aiReportSpinner"></span>
+                                🤖 Generate Complete Incident Report
+                            </button>
+                            <small class="text-muted text-center">AI will analyze form data, extract IOCs, map MITRE ATT&CK, and generate professional SOC report</small>
+                        </div>
+                        
+                        <div id="missingDetailsAlert" class="missing-details-alert" style="display: none;">
+                            <strong>⚠️ Missing Critical Details:</strong>
+                            <div id="missingDetailsList"></div>
+                        </div>
+                        
+                        <div id="iocExtraction" style="display: none; margin-top: 10px;">
+                            <strong>🕵️ Extracted IOCs:</strong>
+                            <div id="iocList" class="mt-2"></div>
+                        </div>
+                        
+                        <div id="aiOutput" class="mt-3"></div>
+                    </div>
+                </div>
+
+                <!-- Report Output Card -->
+                <div class="card mt-3">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">📄 FINAL REPORT OUTPUT</h5>
+                        <div>
+                            <button class="btn btn-sm btn-light me-2" onclick="generateBasicReport()">Generate Basic</button>
+                            <button class="btn btn-sm btn-secondary" onclick="copyToClipboard()">📋 Copy</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" id="reportOutput" rows="20" readonly placeholder="Complete AI-generated report will appear here..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Point Modal -->
+    <div class="modal fade" id="dataPointModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Data Point</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="dataPointType">
+                    <div class="mb-3">
+                        <label class="form-label">Data Point Type</label>
+                        <select class="form-select" id="dpType">
+                            <option value="">-- Select Type --</option>
+                            <option>Network Log</option>
+                            <option>Firewall Log</option>
+                            <option>Proxy Log</option>
+                            <option>Email Header</option>
+                            <option>EDR Alert</option>
+                            <option>Authentication Log</option>
+                            <option>Endpoint Log</option>
+                            <option>Threat Intel</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Log Query / Search</label>
+                        <input type="text" class="form-control" id="dpQuery" placeholder="e.g., index=firewall dest_ip=...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Detail / Result</label>
+                        <input type="text" class="form-control" id="dpDetail" placeholder="e.g., Connection BLOCKED, malware hash: ...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Source System</label>
+                        <input type="text" class="form-control" id="dpSource" placeholder="e.g., Splunk, CrowdStrike, Firewall-01">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="addDataPoint()">Add Data Point</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Modal -->
+    <div class="modal fade" id="actionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Action Type</label>
+                        <select class="form-select" id="actionType">
+                            <option value="">-- Select Action --</option>
+                            <option>Investigation & Analysis</option>
+                            <option>Containment & Blocking</option>
+                            <option>Eradication & Remediation</option>
+                            <option>Recovery & Closure</option>
+                            <option>Communication</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Verb + Action</label>
+                        <input type="text" class="form-control" id="actionVerb" placeholder="e.g., Reviewed firewall logs, Blocked malicious domain...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tool Used</label>
+                        <input type="text" class="form-control" id="actionTool" placeholder="e.g., Splunk, CrowdStrike Console, Firewall CLI">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Result</label>
+                        <input type="text" class="form-control" id="actionResult" placeholder="e.g., Confirmed block, Found malicious file...">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="addAction()">Add Action</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Set current date/time
+            const now = new Date();
+            const localDateTime = now.toISOString().slice(0, 16);
+            document.getElementById('dateCreated').value = localDateTime;
+            document.getElementById('closedOn').value = now.toISOString().split('T')[0];
+            
+            // Load saved data
+            loadFromLocalStorage();
+            
+            // Initialize dark mode toggle
+            document.getElementById('darkModeToggle').addEventListener('change', function() {
+                document.body.classList.toggle('dark-mode', this.checked);
+                saveToLocalStorage();
+            });
+            
+            // Auto-save on input
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                element.addEventListener('input', saveToLocalStorage);
+                element.addEventListener('change', saveToLocalStorage);
+            });
+            
+            // Load AI model preference
+            const savedModel = localStorage.getItem('openrouter_model') || 'openai/gpt-3.5-turbo';
+            document.getElementById('aiModel').value = savedModel;
+        });
+
+        // ==================== API FUNCTIONS ====================
+        
+        async function loadApiKeyFromFile() {
+            try {
+                const response = await fetch('APIkey.txt');
+                if (response.ok) {
+                    const apiKey = (await response.text()).trim();
+                    if (apiKey && apiKey.startsWith('sk-or-')) {
+                        document.getElementById('apiKeyManual').value = apiKey;
+                        localStorage.setItem('openrouter_api_key', apiKey);
+                        updateApiStatus('Auto-loaded from APIkey.txt', 'success');
+                        document.getElementById('apiStatusBadge').className = 'status-badge status-connected';
+                        document.getElementById('apiStatusBadge').textContent = 'Connected';
+                        setTimeout(() => testAPI(), 1000);
+                        return true;
+                    }
+                }
+            } catch (error) {
+                console.log('APIkey.txt not found or error reading:', error);
+            }
+            
+            const savedApiKey = localStorage.getItem('openrouter_api_key');
+            if (savedApiKey) {
+                document.getElementById('apiKeyManual').value = savedApiKey;
+                updateApiStatus('Using saved API key', 'info');
+            } else {
+                updateApiStatus('No API key found. Please enter one manually or create APIkey.txt file.', 'warning');
+            }
+            return false;
+        }
+        
+        function toggleApiKeySource() {
+            const autoSelected = document.getElementById('autoApiKey').checked;
+            const manualSection = document.getElementById('manualApiKeySection');
+            
+            if (autoSelected) {
+                manualSection.style.display = 'none';
+                loadApiKeyFromFile();
+            } else {
+                manualSection.style.display = 'block';
+            }
+        }
+        
+        function updateApiStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('apiStatus');
+            const alertClass = type === 'success' ? 'alert-success' : 
+                             type === 'warning' ? 'alert-warning' : 
+                             type === 'danger' ? 'alert-danger' : 'alert-info';
+            statusDiv.innerHTML = `
+                <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+        }
+
+        // Data storage
+        let dataPoints = {
+            confirmed: [],
+            notConfirmed: [],
+            resolved: []
+        };
+        let actions = [];
+
+        // ==================== ENHANCED AI REPORT GENERATION ====================
+        
+        async function generateCompleteIncidentReport() {
+            // Validate basic info first
+            const classification = document.getElementById('classification').value;
+            const caseId = document.getElementById('caseId').value;
+            const endpoint = document.getElementById('endpoint').value;
+            
+            if (!classification || !caseId || !endpoint) {
+                showAIOutput('❌ Please fill in Classification, Case ID, and Endpoint fields first.', 'danger');
+                return;
+            }
+            
+            showThinking('aiReportBtn', true);
+            
+            // Collect all form data
+            const formData = collectAllFormData();
+            
+            // Analyze for missing critical details
+            const missingDetails = analyzeMissingDetails(formData);
+            
+            if (missingDetails.length > 0) {
+                showMissingDetailsAlert(missingDetails);
+            }
+            
+            // Extract IOCs from evidence
+            const iocs = extractIOCs(formData);
+            displayExtractedIOCs(iocs);
+            
+            // Map to MITRE ATT&CK
+            const mitreMapping = mapToMitreATTACK(formData.classification);
+            
+            // Generate AI prompt
+            const prompt = createEnhancedAIPrompt(formData, missingDetails, iocs, mitreMapping);
+            
+            const systemPrompt = `You are an experienced SOC L1 Analyst writing a professional incident report. 
+            Write in clear, concise, direct language. No unnecessary symbols or markdown formatting.
+            Use standard SOC terminology and structure. Be factual and evidence-based.
+            Include MITRE ATT&CK mapping, IOCs, and detailed investigation response.
+            If details are missing, note them but still provide a complete report.`;
+            
+            const result = await callOpenRouterAPI(prompt, systemPrompt, true);
+            
+            if (result) {
+                document.getElementById('reportOutput').value = result;
+                showAIOutput('✅ Complete incident report generated successfully!', 'success');
+                
+                // Auto-fill any missing classification reason
+                if (!document.getElementById('classificationReason').value.trim()) {
+                    extractAndFillClassificationReason(result);
+                }
+                
+                // Auto-fill investigation response fields if empty
+                autoFillInvestigationResponse(result);
+            }
+            
+            showThinking('aiReportBtn', false);
+        }
+        
+        // ==================== IOC EXTRACTION ====================
+        
+        function extractIOCs(formData) {
+            const iocs = {
+                ips: [],
+                domains: [],
+                urls: [],
+                hashes: [],
+                emails: [],
+                files: []
+            };
+            
+            // Regex patterns for IOC extraction
+            const patterns = {
+                ipv4: /\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b/g,
+                ipv6: /\b(?:[A-F0-9]{1,4}:){7}[A-F0-9]{1,4}\b/gi,
+                domain: /\b(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}\b/g,
+                url: /https?:\/\/[^\s]+/g,
+                md5: /\b[a-fA-F0-9]{32}\b/g,
+                sha1: /\b[a-fA-F0-9]{40}\b/g,
+                sha256: /\b[a-fA-F0-9]{64}\b/g,
+                email: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
+                filename: /\b\w+\.(exe|dll|bat|ps1|vbs|js|jar|pdf|doc|docx|xls|xlsx|ppt|pptx|lnk)\b/gi
+            };
+            
+            // Extract from all evidence
+            const allEvidence = [
+                ...formData.confirmedEvidence,
+                ...formData.notConfirmedEvidence,
+                ...formData.resolvedEvidence
+            ];
+            
+            // Also check form fields for IOCs
+            const textFields = [
+                formData.determineOutcome,
+                formData.escalationReason,
+                formData.recommendation,
+                formData.containment,
+                formData.eradication,
+                formData.recovery,
+                formData.timelineActions,
+                formData.containmentAction,
+                formData.eradicationRemediation
+            ];
+            
+            const allText = allEvidence.map(e => e.detail + ' ' + e.query).join(' ') + 
+                          ' ' + textFields.join(' ');
+            
+            // Extract IPs
+            const ipv4Matches = allText.match(patterns.ipv4) || [];
+            const ipv6Matches = allText.match(patterns.ipv6) || [];
+            iocs.ips = [...new Set([...ipv4Matches, ...ipv6Matches])];
+            
+            // Extract domains
+            iocs.domains = [...new Set((allText.match(patterns.domain) || []).filter(d => !d.includes('@')))];
+            
+            // Extract URLs
+            iocs.urls = [...new Set(allText.match(patterns.url) || [])];
+            
+            // Extract hashes
+            iocs.hashes = {
+                md5: [...new Set(allText.match(patterns.md5) || [])],
+                sha1: [...new Set(allText.match(patterns.sha1) || [])],
+                sha256: [...new Set(allText.match(patterns.sha256) || [])]
+            };
+            
+            // Extract emails
+            iocs.emails = [...new Set(allText.match(patterns.email) || [])];
+            
+            // Extract filenames
+            iocs.files = [...new Set(allText.match(patterns.filename) || [])];
+            
+            return iocs;
+        }
+        
+        function displayExtractedIOCs(iocs) {
+            const iocDiv = document.getElementById('iocExtraction');
+            const iocList = document.getElementById('iocList');
+            
+            let iocCount = 0;
+            let html = '';
+            
+            // Count total IOCs
+            iocCount += iocs.ips.length;
+            iocCount += iocs.domains.length;
+            iocCount += iocs.urls.length;
+            iocCount += iocs.hashes.md5.length + iocs.hashes.sha1.length + iocs.hashes.sha256.length;
+            iocCount += iocs.emails.length;
+            iocCount += iocs.files.length;
+            
+            if (iocCount === 0) {
+                iocDiv.style.display = 'none';
+                return;
+            }
+            
+            // Display IOCs
+            if (iocs.ips.length > 0) {
+                html += `<div class="mb-2"><strong>IP Addresses:</strong><br>`;
+                iocs.ips.forEach(ip => {
+                    html += `<span class="ioc-badge">${ip}</span>`;
+                });
+                html += `</div>`;
+            }
+            
+            if (iocs.domains.length > 0) {
+                html += `<div class="mb-2"><strong>Domains:</strong><br>`;
+                iocs.domains.forEach(domain => {
+                    html += `<span class="ioc-badge">${domain}</span>`;
+                });
+                html += `</div>`;
+            }
+            
+            if (iocs.urls.length > 0) {
+                html += `<div class="mb-2"><strong>URLs:</strong><br>`;
+                iocs.urls.forEach(url => {
+                    html += `<span class="ioc-badge">${url}</span>`;
+                });
+                html += `</div>`;
+            }
+            
+            // Hashes
+            let allHashes = [...iocs.hashes.md5, ...iocs.hashes.sha1, ...iocs.hashes.sha256];
+            if (allHashes.length > 0) {
+                html += `<div class="mb-2"><strong>File Hashes:</strong><br>`;
+                allHashes.forEach(hash => {
+                    html += `<span class="ioc-badge">${hash.substring(0, 12)}...</span>`;
+                });
+                html += `</div>`;
+            }
+            
+            iocList.innerHTML = html;
+            iocDiv.style.display = 'block';
+        }
+        
+        // ==================== MITRE ATT&CK MAPPING ====================
+        
+        function mapToMitreATTACK(classification) {
+            const mitreMapping = {
+                // Initial Access (TA0001)
+                'Phishing (Spearphishing Link/Attachment)': ['T1566', 'Phishing'],
+                'Malicious Email (No interaction confirmed)': ['T1566', 'Phishing'],
+                'Exploit Public-Facing Application': ['T1190', 'Exploit Public-Facing Application'],
+                'External Remote Services (RDP/VPN brute force)': ['T1133', 'External Remote Services'],
+                'Valid Accounts (Credential-Based Attack)': ['T1078', 'Valid Accounts'],
+                'Drive-by Compromise': ['T1189', 'Drive-by Compromise'],
+                'Supply Chain Compromise': ['T1195', 'Supply Chain Compromise'],
+                
+                // Execution (TA0002)
+                'Malware Execution': ['T1204', 'User Execution'],
+                'Command and Scripting Interpreter': ['T1059', 'Command and Scripting Interpreter'],
+                'User Execution (double-clicked file)': ['T1204', 'User Execution'],
+                'Exploitation for Client Execution': ['T1203', 'Exploitation for Client Execution'],
+                'Scheduled Task/Job': ['T1053', 'Scheduled Task/Job'],
+                
+                // Persistence (TA0003)
+                'Account Manipulation': ['T1098', 'Account Manipulation'],
+                'Boot or Logon Autostart Execution': ['T1547', 'Boot or Logon Autostart Execution'],
+                'Valid Accounts': ['T1078', 'Valid Accounts'],
+                
+                // Privilege Escalation (TA0004)
+                'Exploitation for Privilege Escalation': ['T1068', 'Exploitation for Privilege Escalation'],
+                'Process Injection': ['T1055', 'Process Injection'],
+                'Access Token Manipulation': ['T1134', 'Access Token Manipulation'],
+                
+                // Defense Evasion (TA0005)
+                'Obfuscated Files or Information': ['T1027', 'Obfuscated Files or Information'],
+                'Impair Defenses (AV/EDR tampering)': ['T1562', 'Impair Defenses'],
+                'Signed Binary Proxy Execution': ['T1218', 'Signed Binary Proxy Execution'],
+                'Indicator Removal': ['T1070', 'Indicator Removal'],
+                
+                // Credential Access (TA0006)
+                'Credential Dumping': ['T1003', 'OS Credential Dumping'],
+                'Brute Force': ['T1110', 'Brute Force'],
+                'OS Credential Dumping': ['T1003', 'OS Credential Dumping'],
+                'Steal or Forge Kerberos Tickets': ['T1558', 'Steal or Forge Kerberos Tickets'],
+                
+                // Discovery (TA0007)
+                'Network Service Discovery': ['T1046', 'Network Service Discovery'],
+                'System Information Discovery': ['T1082', 'System Information Discovery'],
+                'Account Discovery': ['T1087', 'Account Discovery'],
+                'File and Directory Discovery': ['T1083', 'File and Directory Discovery'],
+                
+                // Lateral Movement (TA0008)
+                'Remote Services (SMB, RPC, RDP)': ['T1021', 'Remote Services'],
+                'Internal Spearphishing': ['T1534', 'Internal Spearphishing'],
+                'Replication Through Removable Media': ['T1091', 'Replication Through Removable Media'],
+                
+                // Collection (TA0009)
+                'Data from Local System': ['T1005', 'Data from Local System'],
+                'Email Collection': ['T1114', 'Email Collection'],
+                'Screen Capture': ['T1113', 'Screen Capture'],
+                'Audio Capture': ['T1123', 'Audio Capture'],
+                
+                // Exfiltration (TA0010)
+                'Exfiltration Over C2 Channel': ['T1041', 'Exfiltration Over C2 Channel'],
+                'Automated Exfiltration': ['T1020', 'Automated Exfiltration'],
+                'Exfiltration Over Web Service': ['T1048', 'Exfiltration Over Web Service'],
+                
+                // Impact (TA0040)
+                'Data Encrypted for Impact (Ransomware)': ['T1486', 'Data Encrypted for Impact'],
+                'Service Stop (DoS)': ['T1489', 'Service Stop'],
+                'Defacement': ['T1491', 'Defacement'],
+                'Data Destruction': ['T1485', 'Data Destruction'],
+                
+                // Other Categories
+                'Policy Violation': ['T1078', 'Valid Accounts'],
+                'Reconnaissance / Scanning': ['T1595', 'Active Scanning'],
+                'Suspicious Network Activity': ['T1046', 'Network Service Discovery'],
+                'False Positive': ['N/A', 'No MITRE Mapping'],
+                'Test / Drill': ['N/A', 'No MITRE Mapping'],
+                'Data Spillage': ['T1530', 'Data from Cloud Storage'],
+                'Insider Threat Indicator': ['T1078', 'Valid Accounts']
+            };
+            
+            return mitreMapping[classification] || ['TBD', 'To be determined'];
+        }
+        
+        // ==================== ENHANCED AI PROMPT ====================
+        
+        function createEnhancedAIPrompt(formData, missingDetails, iocs, mitreMapping) {
+            const status = formData.status;
+            const analystName = document.getElementById('analystName').value;
+            
+            let prompt = `Generate a complete SOC Incident Report as an L1 Analyst would write it for the team.
+
+ANALYST: ${analystName}
+CASE ID: ${formData.caseId || 'Not specified'}
+DETECTION SOURCE: ${formData.endpoint || 'Not specified'}
+STATUS: ${status}
+PRIORITY: ${formData.priority}
+CLASSIFICATION: ${formData.classification || 'Not classified'}
+
+MITRE ATT&CK MAPPING:
+- Technique ID: ${mitreMapping[0]}
+- Technique Name: ${mitreMapping[1]}
+- Tactic: ${formData.classification.includes('TA') ? formData.classification.split(' ')[0] : 'TBD'}
+
+TIMELINE:
+Created: ${formData.dateCreated || 'Not specified'}
+${status === 'Resolved' ? `Resolved: ${formData.dateResolved || 'Not specified'}` : ''}
+${formData.timeToResolve ? `Time to Resolve: ${formData.timeToResolve}` : ''}`;
+
+            // Add IOCs section
+            let iocCount = 0;
+            iocCount += iocs.ips.length;
+            iocCount += iocs.domains.length;
+            iocCount += iocs.urls.length;
+            iocCount += iocs.hashes.md5.length + iocs.hashes.sha1.length + iocs.hashes.sha256.length;
+            iocCount += iocs.emails.length;
+            iocCount += iocs.files.length;
+            
+            if (iocCount > 0) {
+                prompt += `\n\nEXTRACTED INDICATORS OF COMPROMISE (IOCs):`;
+                
+                if (iocs.ips.length > 0) {
+                    prompt += `\nIP Addresses: ${iocs.ips.join(', ')}`;
+                }
+                if (iocs.domains.length > 0) {
+                    prompt += `\nDomains: ${iocs.domains.join(', ')}`;
+                }
+                if (iocs.urls.length > 0) {
+                    prompt += `\nURLs: ${iocs.urls.join(', ')}`;
+                }
+                if (iocs.hashes.md5.length > 0) {
+                    prompt += `\nMD5 Hashes: ${iocs.hashes.md5.join(', ')}`;
+                }
+                if (iocs.hashes.sha1.length > 0) {
+                    prompt += `\nSHA1 Hashes: ${iocs.hashes.sha1.join(', ')}`;
+                }
+                if (iocs.hashes.sha256.length > 0) {
+                    prompt += `\nSHA256 Hashes: ${iocs.hashes.sha256.join(', ')}`;
+                }
+                if (iocs.emails.length > 0) {
+                    prompt += `\nEmail Addresses: ${iocs.emails.join(', ')}`;
+                }
+                if (iocs.files.length > 0) {
+                    prompt += `\nSuspicious Files: ${iocs.files.join(', ')}`;
+                }
+            }
+
+            // Add evidence section
+            prompt += `\n\nEVIDENCE COLLECTED:
+CONFIRMED:`;
+            if (formData.confirmedEvidence.length > 0) {
+                formData.confirmedEvidence.forEach(ev => {
+                    prompt += `\n• ${ev.type}: ${ev.detail} ${ev.source ? `(${ev.source})` : ''}`;
+                });
+            } else {
+                prompt += '\n• No confirmed evidence documented';
+            }
+            
+            prompt += `\n\nNOT CONFIRMED (GAPS):`;
+            if (formData.notConfirmedEvidence.length > 0) {
+                formData.notConfirmedEvidence.forEach(ev => {
+                    prompt += `\n• ${ev.type}: ${ev.detail}`;
+                });
+            } else {
+                prompt += '\n• No investigation gaps documented';
+            }
+            
+            // Add investigation response section
+            if (formData.timelineActions || formData.containmentAction || formData.eradicationRemediation) {
+                prompt += `\n\nINVESTIGATION RESPONSE:`;
+                if (formData.timelineActions) {
+                    prompt += `\nTimeline & Actions: ${formData.timelineActions}`;
+                }
+                if (formData.containmentAction) {
+                    prompt += `\nContainment Action: ${formData.containmentAction}`;
+                }
+                if (formData.eradicationRemediation) {
+                    prompt += `\nEradication & Remediation: ${formData.eradicationRemediation}`;
+                }
+            }
+            
+            // Add analysis section
+            if (formData.determineOutcome) {
+                prompt += `\n\nANALYSIS NOTES:\n${formData.determineOutcome}`;
+            }
+            
+            // Add actions if resolved
+            if (status === 'Resolved' && formData.actions.length > 0) {
+                prompt += `\n\nACTIONS TAKEN (L1):`;
+                formData.actions.forEach(action => {
+                    prompt += `\n• ${action.verb} ${action.result ? `- Result: ${action.result}` : ''} ${action.tool ? `(Tool: ${action.tool})` : ''}`;
+                });
+            }
+            
+            // Add resolution details if available
+            if (formData.containment || formData.eradication || formData.recovery) {
+                prompt += `\n\nRESPONSE ACTIONS:`;
+                if (formData.containment) prompt += `\nContainment: ${formData.containment}`;
+                if (formData.eradication) prompt += `\nEradication: ${formData.eradication}`;
+                if (formData.recovery) prompt += `\nRecovery: ${formData.recovery}`;
+            }
+            
+            // Add escalation info
+            if (formData.needsEscalation === 'YES') {
+                prompt += `\n\nESCALATION REQUIRED: Yes`;
+                if (formData.escalationReason) prompt += `\nReason: ${formData.escalationReason}`;
+            }
+            
+            // Add recommendations
+            if (formData.recommendation) {
+                prompt += `\n\nRECOMMENDATIONS:\n${formData.recommendation}`;
+            }
+            
+            // Add missing details note
+            if (missingDetails.length > 0) {
+                prompt += `\n\nNOTE: The following details were not provided in the form and should be acquired for a complete report:`;
+                missingDetails.forEach(item => {
+                    prompt += `\n• ${item}`;
+                });
+            }
+            
+            prompt += `\n\nGenerate a professional SOC incident report with the following structure:
+1. EXECUTIVE SUMMARY (brief overview of what happened, MITRE ATT&CK mapping)
+2. INCIDENT DETAILS (case ID, timeline, classification, priority)
+3. INDICATORS OF COMPROMISE (IOCs extracted from evidence)
+4. INVESTIGATION RESPONSE (timeline, containment, eradication actions)
+5. EVIDENCE & FINDINGS (what was found, confirmed/unconfirmed)
+6. ANALYSIS (L1 assessment and decision logic, MITRE ATT&CK context)
+7. ACTIONS TAKEN (what was done, tools used, results)
+8. IMPACT ASSESSMENT (business/technical impact)
+9. RECOMMENDATIONS (next steps, improvements, IOC blocking recommendations)
+10. CLOSURE (status, escalation needs, prepared by ${analystName})
+
+Write in clear, concise language without unnecessary symbols or markdown. Include the analyst name in appropriate sections.`;
+            
+            return prompt;
+        }
+        
+        function collectAllFormData() {
+            const status = document.getElementById('status').value;
+            
+            return {
+                // Basic Info
+                caseId: document.getElementById('caseId').value,
+                endpoint: document.getElementById('endpoint').value,
+                status: status,
+                priority: document.getElementById('priority').value,
+                classification: document.getElementById('classification').value,
+                classificationReason: document.getElementById('classificationReason').value,
+                dateCreated: document.getElementById('dateCreated').value,
+                dateResolved: document.getElementById('dateResolved').value,
+                
+                // Evidence
+                confirmedEvidence: dataPoints.confirmed,
+                notConfirmedEvidence: dataPoints.notConfirmed,
+                resolvedEvidence: dataPoints.resolved,
+                
+                // Actions
+                actions: actions,
+                
+                // Investigation Response
+                timelineActions: document.getElementById('timelineActions').value,
+                containmentAction: document.getElementById('containmentAction').value,
+                eradicationRemediation: document.getElementById('eradicationRemediation').value,
+                
+                // Investigation
+                determineOutcome: document.getElementById('determineOutcome').value,
+                needsEscalation: document.getElementById('needsEscalation').value,
+                escalationReason: document.getElementById('escalationReason').value,
+                recommendation: document.getElementById('recommendation').value,
+                
+                // Resolution (if applicable)
+                timeToResolve: document.getElementById('timeToResolve').value,
+                containment: document.getElementById('containment').value,
+                eradication: document.getElementById('eradication').value,
+                recovery: document.getElementById('recovery').value,
+                impact: document.getElementById('impact').value,
+                finalReason: document.getElementById('finalReason').value,
+                resolvedEscalation: document.getElementById('resolvedEscalation').value,
+                
+                // Closure
+                preparedBy: document.getElementById('preparedBy').value,
+                closedBy: document.getElementById('closedBy').value,
+                closedOn: document.getElementById('closedOn').value
+            };
+        }
+        
+        function analyzeMissingDetails(formData) {
+            const missing = [];
+            
+            // Critical missing details
+            if (!formData.classification) missing.push("Classification (required for all incidents)");
+            if (!formData.caseId) missing.push("Case ID from SIEM (required for tracking)");
+            if (!formData.endpoint || formData.endpoint === "-- Select Endpoint --") missing.push("Detection source/endpoint (required for context)");
+            if (!formData.classificationReason) missing.push("Reason for classification (explains why this classification was chosen)");
+            
+            // Evidence related
+            if (formData.confirmedEvidence.length === 0) missing.push("Confirmed evidence data points (what you actually found)");
+            
+            // Investigation response
+            if (!formData.timelineActions) missing.push("Timeline & Actions (chronological investigation steps)");
+            if (!formData.containmentAction) missing.push("Containment Action (immediate containment steps)");
+            if (!formData.eradicationRemediation) missing.push("Eradication & Remediation (root cause removal)");
+            
+            // Status specific
+            if (formData.status === 'Resolved') {
+                if (!formData.containment) missing.push("Containment actions taken");
+                if (!formData.eradication) missing.push("Eradication steps performed");
+                if (!formData.timeToResolve) missing.push("Total time to resolve (for metrics)");
+                if (formData.actions.length === 0) missing.push("Specific actions taken (what you did)");
+            } else {
+                if (!formData.determineOutcome) missing.push("Determine outcome logic (decision criteria)");
+                if (formData.needsEscalation === 'YES' && !formData.escalationReason) missing.push("Escalation justification (why L2/L3 needed)");
+            }
+            
+            return missing;
+        }
+        
+        function showMissingDetailsAlert(missingDetails) {
+            const alertDiv = document.getElementById('missingDetailsAlert');
+            const listDiv = document.getElementById('missingDetailsList');
+            
+            listDiv.innerHTML = '';
+            missingDetails.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'small';
+                div.textContent = `• ${item}`;
+                listDiv.appendChild(div);
+            });
+            
+            alertDiv.style.display = 'block';
+            
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 10000);
+        }
+        
+        function extractAndFillClassificationReason(aiReport) {
+            // Try to extract a summary from the AI report for classification reason
+            const lines = aiReport.split('\n');
+            let summary = '';
+            
+            for (let i = 0; i < Math.min(5, lines.length); i++) {
+                const line = lines[i].trim();
+                if (line && 
+                    !line.startsWith('===') && 
+                    !line.startsWith('---') && 
+                    !line.startsWith('EXECUTIVE') &&
+                    !line.startsWith('INCIDENT') &&
+                    line.length > 20) {
+                    summary = line;
+                    break;
+                }
+            }
+            
+            if (summary && !document.getElementById('classificationReason').value.trim()) {
+                document.getElementById('classificationReason').value = summary;
+                saveToLocalStorage();
+            }
+        }
+        
+        function autoFillInvestigationResponse(aiReport) {
+            // Extract timeline, containment, and eradication from AI report
+            const lines = aiReport.split('\n');
+            let timeline = '';
+            let containment = '';
+            let eradication = '';
+            let currentSection = '';
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].toLowerCase();
+                
+                if (line.includes('timeline') || line.includes('chronological')) {
+                    currentSection = 'timeline';
+                } else if (line.includes('containment')) {
+                    currentSection = 'containment';
+                } else if (line.includes('eradication') || line.includes('remediation')) {
+                    currentSection = 'eradication';
+                } else if (line.trim() && currentSection && line.length > 10) {
+                    if (currentSection === 'timeline' && !document.getElementById('timelineActions').value) {
+                        timeline += lines[i] + ' ';
+                    } else if (currentSection === 'containment' && !document.getElementById('containmentAction').value) {
+                        containment += lines[i] + ' ';
+                    } else if (currentSection === 'eradication' && !document.getElementById('eradicationRemediation').value) {
+                        eradication += lines[i] + ' ';
+                    }
+                }
+            }
+            
+            if (timeline && !document.getElementById('timelineActions').value) {
+                document.getElementById('timelineActions').value = timeline.trim();
+            }
+            if (containment && !document.getElementById('containmentAction').value) {
+                document.getElementById('containmentAction').value = containment.trim();
+            }
+            if (eradication && !document.getElementById('eradicationRemediation').value) {
+                document.getElementById('eradicationRemediation').value = eradication.trim();
+            }
+            
+            saveToLocalStorage();
+        }
+        
+        // ==================== API CALL FUNCTION ====================
+        
+        async function callOpenRouterAPI(prompt, systemPrompt = null, autoReplace = false) {
+            const apiKeySource = document.querySelector('input[name="apiKeySource"]:checked').value;
+            let apiKey;
+            
+            if (apiKeySource === 'auto') {
+                apiKey = localStorage.getItem('openrouter_api_key');
+                if (!apiKey) {
+                    const loaded = await loadApiKeyFromFile();
+                    if (!loaded) {
+                        showAIOutput('❌ No API key found. Please check APIkey.txt file or enter manually.', 'danger');
+                        return null;
+                    }
+                    apiKey = localStorage.getItem('openrouter_api_key');
+                }
+            } else {
+                apiKey = document.getElementById('apiKeyManual').value.trim();
+                if (!apiKey) {
+                    showAIOutput('❌ Please enter your OpenRouter API key.', 'danger');
+                    return null;
+                }
+                localStorage.setItem('openrouter_api_key', apiKey);
+            }
+            
+            const model = document.getElementById('aiModel').value;
+            localStorage.setItem('openrouter_model', model);
+            
+            const messages = [];
+            
+            if (systemPrompt) {
+                messages.push({
+                    role: "system",
+                    content: systemPrompt
+                });
+            }
+            
+            messages.push({
+                role: "user",
+                content: prompt
+            });
+            
+            try {
+                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`,
+                        'HTTP-Referer': window.location.origin,
+                        'X-Title': 'SOC Report Assistant'
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: messages,
+                        max_tokens: 2500,
+                        temperature: 0.3
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                return data.choices[0].message.content;
+                
+            } catch (error) {
+                console.error('OpenRouter API Error:', error);
+                showAIOutput(`❌ API Error: ${error.message}`, 'danger');
+                return null;
+            }
+        }
+        
+        function showAIOutput(message, type = 'success') {
+            const outputDiv = document.getElementById('aiOutput');
+            const alertClass = type === 'danger' ? 'alert-danger' : 
+                             type === 'warning' ? 'alert-warning' : 'alert-success';
+            outputDiv.innerHTML = `
+                <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+        }
+        
+        function showThinking(buttonId, show) {
+            const button = document.getElementById(buttonId);
+            const spinner = document.getElementById(buttonId.replace('Btn', 'Spinner'));
+            
+            if (show) {
+                button.disabled = true;
+                spinner.classList.remove('d-none');
+            } else {
+                button.disabled = false;
+                spinner.classList.add('d-none');
+            }
+        }
+        
+        // Test API connection
+        async function testAPI() {
+            showThinking('testApiBtn', true);
+            
+            const prompt = "Please respond with 'API connection successful' if you can read this message.";
+            const systemPrompt = "You are a test assistant. Respond only with the confirmation message.";
+            
+            const result = await callOpenRouterAPI(prompt, systemPrompt);
+            
+            showThinking('testApiBtn', false);
+            
+            if (result && result.includes('successful')) {
+                updateApiStatus('✅ API connection successful! You can now use AI features.', 'success');
+                document.getElementById('apiStatusBadge').className = 'status-badge status-connected';
+                document.getElementById('apiStatusBadge').textContent = 'Connected';
+            } else if (result) {
+                updateApiStatus('⚠️ API responded but with unexpected message: ' + result, 'warning');
+            }
+        }
+        
+        // ==================== EXISTING FUNCTIONS ====================
+        
+        // Modal functions
+        function showDataPointModal(type) {
+            document.getElementById('dataPointType').value = type;
+            document.getElementById('dpType').value = '';
+            document.getElementById('dpQuery').value = '';
+            document.getElementById('dpDetail').value = '';
+            document.getElementById('dpSource').value = '';
+            new bootstrap.Modal(document.getElementById('dataPointModal')).show();
+        }
+
+        function showActionModal() {
+            document.getElementById('actionType').value = '';
+            document.getElementById('actionVerb').value = '';
+            document.getElementById('actionTool').value = '';
+            document.getElementById('actionResult').value = '';
+            new bootstrap.Modal(document.getElementById('actionModal')).show();
+        }
+
+        function addDataPoint() {
+            const type = document.getElementById('dataPointType').value;
+            const dpType = document.getElementById('dpType').value;
+            const query = document.getElementById('dpQuery').value;
+            const detail = document.getElementById('dpDetail').value;
+            const source = document.getElementById('dpSource').value;
+            
+            if (!dpType || !detail) {
+                alert('Please fill in at least Type and Detail fields');
+                return;
+            }
+            
+            const dataPoint = {
+                id: Date.now(),
+                type: dpType,
+                query: query,
+                detail: detail,
+                source: source
+            };
+            
+            dataPoints[type].push(dataPoint);
+            renderDataPoints(type);
+            saveToLocalStorage();
+            
+            bootstrap.Modal.getInstance(document.getElementById('dataPointModal')).hide();
+        }
+
+        function addAction() {
+            const actionType = document.getElementById('actionType').value;
+            const verb = document.getElementById('actionVerb').value;
+            const tool = document.getElementById('actionTool').value;
+            const result = document.getElementById('actionResult').value;
+            
+            if (!verb) {
+                alert('Please enter an action');
+                return;
+            }
+            
+            const action = {
+                id: Date.now(),
+                type: actionType,
+                verb: verb,
+                tool: tool,
+                result: result
+            };
+            
+            actions.push(action);
+            renderActions();
+            saveToLocalStorage();
+            
+            bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+        }
+
+        function deleteDataPoint(type, id) {
+            dataPoints[type] = dataPoints[type].filter(dp => dp.id !== id);
+            renderDataPoints(type);
+            saveToLocalStorage();
+        }
+
+        function deleteAction(id) {
+            actions = actions.filter(action => action.id !== id);
+            renderActions();
+            saveToLocalStorage();
+        }
+
+        function renderDataPoints(type) {
+            const containerId = type + 'Evidence';
+            const container = document.getElementById(containerId);
+            
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            dataPoints[type].forEach(dp => {
+                const div = document.createElement('div');
+                div.className = 'log-entry';
+                div.innerHTML = `
+                    <strong>${dp.type}</strong>: ${dp.detail}
+                    ${dp.query ? `<br><small>Query: ${dp.query}</small>` : ''}
+                    ${dp.source ? `<br><small>Source: ${dp.source}</small>` : ''}
+                    <button class="delete-btn" onclick="deleteDataPoint('${type}', ${dp.id})">✕</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderActions() {
+            const container = document.getElementById('actionsList');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            actions.forEach(action => {
+                const div = document.createElement('div');
+                div.className = 'action-entry';
+                div.innerHTML = `
+                    <strong>${action.type || 'Action'}</strong>: ${action.verb}
+                    ${action.tool ? `<br><small>Tool: ${action.tool}</small>` : ''}
+                    ${action.result ? `<br><small>Result: ${action.result}</small>` : ''}
+                    <button class="delete-btn" onclick="deleteAction(${action.id})">✕</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Form toggle functions
+        function toggleFormSections() {
+            const status = document.getElementById('status').value;
+            const investigationSection = document.getElementById('investigationSection');
+            const resolvedSection = document.getElementById('resolvedSection');
+            const dateResolvedSection = document.getElementById('dateResolvedSection');
+            
+            if (status === 'Resolved') {
+                investigationSection.style.display = 'none';
+                resolvedSection.style.display = 'block';
+                dateResolvedSection.style.display = 'block';
+                
+                if (!document.getElementById('dateResolved').value) {
+                    const now = new Date();
+                    document.getElementById('dateResolved').value = now.toISOString().slice(0, 16);
+                }
+            } else {
+                investigationSection.style.display = 'block';
+                resolvedSection.style.display = 'none';
+                dateResolvedSection.style.display = 'none';
+            }
+            saveToLocalStorage();
+        }
+
+        function toggleEscalationReason() {
+            const needsEscalation = document.getElementById('needsEscalation').value;
+            const section = document.getElementById('escalationReasonSection');
+            section.style.display = needsEscalation === 'YES' ? 'block' : 'none';
+        }
+
+        function updateClassificationReason() {
+            const classification = document.getElementById('classification').value;
+            const reasonField = document.getElementById('classificationReason');
+            
+            const reasonSuggestions = {
+                'Phishing (Spearphishing Link/Attachment)': 'Malicious email delivered with embedded link/attachment. User interaction unknown.',
+                'Malicious Email (No interaction confirmed)': 'Suspicious email reached inbox. No evidence of user interaction.',
+                'Malware Execution': 'Malicious code executed on endpoint. Containment required.',
+                'Suspicious Network Activity': 'Anomalous network traffic detected. Further investigation needed.',
+                'Policy Violation': 'User/system violated security policy. Requires review.',
+                'False Positive': 'Alert triggered incorrectly. No actual threat.',
+                'Valid Accounts (Credential-Based Attack)': 'Unauthorized access using valid credentials. Credential reset required.'
+            };
+            
+            if (reasonSuggestions[classification] && !reasonField.value) {
+                reasonField.value = reasonSuggestions[classification];
+            }
+        }
+
+        // Basic Report Generation (non-AI)
+        function generateBasicReport() {
+            const status = document.getElementById('status').value;
+            let report = '';
+            
+            if (status === 'Under Investigation') {
+                report = generateInvestigationReport();
+            } else {
+                report = generateResolvedReport();
+            }
+            
+            document.getElementById('reportOutput').value = report;
+            saveToLocalStorage();
+        }
+
+        function generateInvestigationReport() {
+            const analystName = document.getElementById('analystName').value;
+            
+            return `INCIDENT REPORT - FOR ESCALATION
+Analyst: ${analystName}
+Case ID: ${document.getElementById('caseId').value || 'N/A'}
+Status: UNDER INVESTIGATION
+Priority: ${document.getElementById('priority').value}
+Classification: ${document.getElementById('classification').value}
+Reason for Classification: ${document.getElementById('classificationReason').value}
+Date Created: ${document.getElementById('dateCreated').value}
+Endpoint: ${document.getElementById('endpoint').value}
+
+ANALYSIS & CURRENT EVIDENCE
+Confirmed:
+${dataPoints.confirmed.map(dp => `- ${dp.type}: ${dp.detail} ${dp.source ? `(Source: ${dp.source})` : ''}`).join('\n')}
+
+Not Confirmed:
+${dataPoints.notConfirmed.map(dp => `- ${dp.type}: ${dp.detail}`).join('\n')}
+
+INVESTIGATION RESPONSE
+Timeline & Actions: ${document.getElementById('timelineActions').value}
+Containment Action: ${document.getElementById('containmentAction').value}
+Eradication & Remediation: ${document.getElementById('eradicationRemediation').value}
+
+DETERMINE OUTCOME:
+${document.getElementById('determineOutcome').value}
+
+ESCALATION DECISION:
+Needs L2/L3: ${document.getElementById('needsEscalation').value}
+${document.getElementById('needsEscalation').value === 'YES' ? `Reason: ${document.getElementById('escalationReason').value}\n` : ''}
+Recommendation: ${document.getElementById('recommendation').value}
+
+Report Prepared By: ${analystName}
+Incident Lead: TBD`;
+        }
+
+        function generateResolvedReport() {
+            const analystName = document.getElementById('analystName').value;
+            const checks = [
+                document.getElementById('check1').checked ? '✓' : '✗',
+                document.getElementById('check2').checked ? '✓' : '✗',
+                document.getElementById('check3').checked ? '✓' : '✗',
+                document.getElementById('check4').checked ? '✓' : '✗',
+                document.getElementById('check5').checked ? '✓' : '✗'
+            ];
+            
+            return `INCIDENT REPORT - RESOLVED
+Analyst: ${analystName}
+Case ID: ${document.getElementById('caseId').value || 'N/A'}
+Status: RESOLVED
+Priority: ${document.getElementById('priority').value}
+Final Classification: ${document.getElementById('classification').value}
+Date Created: ${document.getElementById('dateCreated').value}
+Date Resolved: ${document.getElementById('dateResolved').value}
+Total Time to Resolve: ${document.getElementById('timeToResolve').value}
+Endpoint: ${document.getElementById('endpoint').value}
+
+WHAT I DID (L1 Actions):
+${actions.map(action => `- ${action.verb} ${action.result ? `(${action.result})` : ''}`).join('\n')}
+
+INVESTIGATION RESPONSE
+Timeline & Actions: ${document.getElementById('timelineActions').value}
+Containment Action: ${document.getElementById('containmentAction').value}
+Eradication & Remediation: ${document.getElementById('eradicationRemediation').value}
+
+RESPONSE & REMEDIATION ACTIONS:
+Containment: ${document.getElementById('containment').value}
+Eradication: ${document.getElementById('eradication').value}
+Recovery: ${document.getElementById('recovery').value}
+
+WHAT I FOUND (Evidence):
+${dataPoints.resolved.map(dp => `- ${dp.type}: ${dp.detail} ${dp.source ? `(Source: ${dp.source})` : ''}`).join('\n')}
+
+FINAL RESULT:
+Impact: ${document.getElementById('impact').value}
+Reason: ${document.getElementById('finalReason').value}
+Needs L2/L3: ${document.getElementById('resolvedEscalation').value}
+
+CLOSURE CHECKLIST:
+${checks[0]} All evidence collected and saved
+${checks[1]} Malicious indicators (URL/sender) blocked
+${checks[2]} User notified (if policy requires)
+${checks[3]} No further action needed
+${checks[4]} Ticket ready to close
+
+Report Closed By: ${analystName}
+Closed On: ${document.getElementById('closedOn').value}`;
+        }
+
+        function copyToClipboard() {
+            const textarea = document.getElementById('reportOutput');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                alert('Report copied to clipboard!');
+            });
+        }
+
+        // Local Storage
+        function saveToLocalStorage() {
+            const data = {
+                analystName: document.getElementById('analystName').value,
+                endpoint: document.getElementById('endpoint').value,
+                caseId: document.getElementById('caseId').value,
+                status: document.getElementById('status').value,
+                priority: document.getElementById('priority').value,
+                classification: document.getElementById('classification').value,
+                classificationReason: document.getElementById('classificationReason').value,
+                dateCreated: document.getElementById('dateCreated').value,
+                dateResolved: document.getElementById('dateResolved').value,
+                timelineActions: document.getElementById('timelineActions').value,
+                containmentAction: document.getElementById('containmentAction').value,
+                eradicationRemediation: document.getElementById('eradicationRemediation').value,
+                determineOutcome: document.getElementById('determineOutcome').value,
+                needsEscalation: document.getElementById('needsEscalation').value,
+                escalationReason: document.getElementById('escalationReason').value,
+                recommendation: document.getElementById('recommendation').value,
+                timeToResolve: document.getElementById('timeToResolve').value,
+                containment: document.getElementById('containment').value,
+                eradication: document.getElementById('eradication').value,
+                recovery: document.getElementById('recovery').value,
+                impact: document.getElementById('impact').value,
+                finalReason: document.getElementById('finalReason').value,
+                resolvedEscalation: document.getElementById('resolvedEscalation').value,
+                closedOn: document.getElementById('closedOn').value,
+                darkMode: document.getElementById('darkModeToggle').checked,
+                dataPoints: dataPoints,
+                actions: actions
+            };
+            localStorage.setItem('socReportData', JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('socReportData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                
+                document.getElementById('analystName').value = data.analystName || 'Nicole Dominique Montederamos (L1 Analyst)';
+                document.getElementById('endpoint').value = data.endpoint || '';
+                document.getElementById('caseId').value = data.caseId || '';
+                document.getElementById('status').value = data.status || 'Under Investigation';
+                document.getElementById('priority').value = data.priority || 'Medium';
+                document.getElementById('classification').value = data.classification || '';
+                document.getElementById('classificationReason').value = data.classificationReason || '';
+                document.getElementById('dateCreated').value = data.dateCreated || '';
+                document.getElementById('dateResolved').value = data.dateResolved || '';
+                document.getElementById('timelineActions').value = data.timelineActions || '';
+                document.getElementById('containmentAction').value = data.containmentAction || '';
+                document.getElementById('eradicationRemediation').value = data.eradicationRemediation || '';
+                document.getElementById('determineOutcome').value = data.determineOutcome || '';
+                document.getElementById('needsEscalation').value = data.needsEscalation || 'NO';
+                document.getElementById('escalationReason').value = data.escalationReason || '';
+                document.getElementById('recommendation').value = data.recommendation || '';
+                document.getElementById('timeToResolve').value = data.timeToResolve || '';
+                document.getElementById('containment').value = data.containment || '';
+                document.getElementById('eradication').value = data.eradication || '';
+                document.getElementById('recovery').value = data.recovery || '';
+                document.getElementById('impact').value = data.impact || 'NONE';
+                document.getElementById('finalReason').value = data.finalReason || '';
+                document.getElementById('resolvedEscalation').value = data.resolvedEscalation || 'NO';
+                document.getElementById('closedOn').value = data.closedOn || '';
+                document.getElementById('darkModeToggle').checked = data.darkMode || false;
+                
+                document.body.classList.toggle('dark-mode', data.darkMode);
+                
+                if (data.dataPoints) {
+                    dataPoints = data.dataPoints;
+                    renderDataPoints('confirmed');
+                    renderDataPoints('notConfirmed');
+                    renderDataPoints('resolved');
+                }
+                
+                if (data.actions) {
+                    actions = data.actions;
+                    renderActions();
+                }
+                
+                toggleFormSections();
+                toggleEscalationReason();
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('Clear all form data? This cannot be undone.')) {
+                localStorage.removeItem('socReportData');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
