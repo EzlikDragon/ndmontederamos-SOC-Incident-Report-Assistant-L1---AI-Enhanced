@@ -14,7 +14,7 @@ Features • Demo • Installation • Usage • MITRE ATT&CK
 
 </div>
 <div align="center"> <img src="https://img.shields.io/badge/-Professional%20SOC%20Reporting-0052CC?style=for-the-badge&logo=github&logoColor=white" /> <img src="https://img.shields.io/badge/-AI%20Powered%20Analysis-7C3AED?style=for-the-badge&logo=openai&logoColor=white" /> <img src="https://img.shields.io/badge/-MITRE%20ATT&CK%20Aligned-C53030?style=for-the-badge&logo=linux&logoColor=white" /> </div>
-<div align="center"> <img src="https://via.placeholder.com/800x450/1e293b/ffffff?text=SOC+Report+Assistant+Interface" width="800" alt="SOC Report Interface Preview" /> <p><em>Modern, intuitive interface for SOC analysts</em></p> </div>
+<p><em>Modern, intuitive interface for SOC analysts</em></p> </div>
 🚀 Why This Tool?
 Time is critical in incident response. This tool eliminates the 60% of time L1 analysts spend on documentation, allowing them to focus on investigation while generating professional, standardized reports in seconds.
 
