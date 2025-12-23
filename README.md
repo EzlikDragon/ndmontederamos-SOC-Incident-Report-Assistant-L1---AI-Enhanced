@@ -83,7 +83,7 @@ bash
 git clone https://github.com/EzlikDragon/ndmontederamos-SOC-Incident-Report-Assistant-L1---AI-Enhanced.git
 
 # 2. Navigate to directory
-cd soc-report-assistant
+cd ndmontederamos-SOC-Incident-Report-Assistant-L1---AI-Enhanced
 
 # 3. Create API key file (optional)
 echo "sk-or-your-api-key-here" > APIkey.txt
